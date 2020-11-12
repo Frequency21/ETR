@@ -7,4 +7,5 @@ module etr {
 
     opens main;
     opens main.model;
+    opens main.controller;
 }
