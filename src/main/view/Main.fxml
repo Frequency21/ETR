@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TabPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="main.controller.MainController">
+    <Tab fx:id="studentsTab" closable="false" text="Hallgatók">
+        <fx:include source="StudentsTab.fxml"/>
+    </Tab>
+    <Tab fx:id="teachersTab" closable="false" text="Oktatók">
+        <fx:include source="TeachersTab.fxml"/>
+    </Tab>
+</TabPane>
