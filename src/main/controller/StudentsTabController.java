@@ -15,7 +15,7 @@ import java.net.URL;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable {
+public class HallgatoTabController implements Initializable {
 
     private final StudentDAO studentDAO = new StudentDAO();
 
@@ -36,7 +36,7 @@ public class MainController implements Initializable {
     public TableColumn<Student, Short> colYear;
     public TableColumn<Student, String> colEmail;
 
-    public MainController() {}
+    public HallgatoTabController() {}
 
     @FXML
     public void handleButtonEvent(ActionEvent event) {
