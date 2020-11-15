@@ -6,30 +6,14 @@ import main.model.Student;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StudentDAO extends DAO {
 
-    private static final Map<Character, Character> makeAscii = new HashMap<>();
-    private static final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    static {
-        makeAscii.put('Ö', 'O');
-        makeAscii.put('Ő', 'O');
-        makeAscii.put('Ó', 'O');
-        makeAscii.put('Ü', 'U');
-        makeAscii.put('Ű', 'U');
-        makeAscii.put('Ú', 'U');
-        makeAscii.put('É', 'E');
-        makeAscii.put('Á', 'A');
-    }
-
     public List<Student> getStudents() {
         String sql = "SELECT f.etr_kod, f.vnev, f.knev, szak, evfolyam, f.email FROM " +
-                "hallgato INNER JOIN felhasznalo f " +
-                "ON hallgato.etr_kod = f.etr_kod";
+            "hallgato INNER JOIN felhasznalo f " +
+            "ON hallgato.etr_kod = f.etr_kod";
         return getStudents(sql);
     }
 
@@ -53,17 +37,7 @@ public class StudentDAO extends DAO {
     public void addStudent(String firstName, String lastName, String major, short year, String email) throws SQLIntegrityConstraintViolationException {
         String sqlUser = "INSERT INTO felhasznalo VALUES (?, ?, ?, ?)",
             sqlStud = "INSERT INTO hallgato VALUES (?, ?, ?)";
-//        etr-kód prefixe
-        String prefix = "";
-        prefix += makeAscii.containsKey(firstName.toUpperCase().charAt(0)) ?
-            makeAscii.get(firstName.toUpperCase().charAt(0)) :
-            firstName.toUpperCase().charAt(0);
-        prefix += makeAscii.containsKey(firstName.toUpperCase().charAt(1)) ?
-            makeAscii.get(firstName.toUpperCase().charAt(1)) :
-            firstName.toUpperCase().charAt(1);
-        prefix += makeAscii.containsKey(lastName.toUpperCase().charAt(0)) ?
-            makeAscii.get(lastName.toUpperCase().charAt(0)) :
-            lastName.toUpperCase().charAt(0);
+        String prefix = ETRCodeMaker.etrCodePrefix(firstName, lastName);
 //        Hány olyan felhasználó van, akinek azonos etr kódra képződne le a neve?
         String sqlCount = "SELECT count(*) AS darab FROM felhasznalo WHERE etr_kod like ?";
         int count = 0;
@@ -76,7 +50,7 @@ public class StudentDAO extends DAO {
             ResultSet rs = stmtCount.executeQuery();
             if (rs.next())
                 count = rs.getInt("darab");
-            String etrCode = createEtrCode(firstName, lastName, count);
+            String etrCode = ETRCodeMaker.createEtrCode(firstName, lastName, count);
             stmtUser.setString(1, etrCode);
             stmtUser.setString(2, firstName);
             stmtUser.setString(3, lastName);
@@ -176,39 +150,17 @@ public class StudentDAO extends DAO {
         Student student = null;
         try {
             student = new Student(
-                    rs.getString("etr_kod"),
-                    rs.getString("vnev"),
-                    rs.getString("knev"),
-                    rs.getString("szak"),
-                    rs.getShort("evfolyam"),
-                    rs.getString("email")
+                rs.getString("etr_kod"),
+                rs.getString("vnev"),
+                rs.getString("knev"),
+                rs.getString("szak"),
+                rs.getShort("evfolyam"),
+                rs.getString("email")
             );
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return student;
-    }
-
-    private static String createEtrCode(String firstName, String lastName, int count) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeAscii.containsKey(firstName.toUpperCase().charAt(0)) ?
-                makeAscii.get(firstName.toUpperCase().charAt(0)) :
-                firstName.toUpperCase().charAt(0));
-        sb.append(makeAscii.containsKey(firstName.toUpperCase().charAt(1)) ?
-                makeAscii.get(firstName.toUpperCase().charAt(1)) :
-                firstName.toUpperCase().charAt(1));
-        sb.append(makeAscii.containsKey(lastName.toUpperCase().charAt(0)) ?
-                makeAscii.get(lastName.toUpperCase().charAt(0)) :
-                lastName.toUpperCase().charAt(0));
-        int q = count / 26;
-        int q2 = q / 26;
-        int q3 = q2 / 26;
-        sb.append(alphabet.charAt((q2 + 24) % 26));
-        sb.append(alphabet.charAt(q % 26));
-        sb.append(alphabet.charAt(count % 26));
-        sb.append(alphabet.charAt((q3 + 19) % 26));
-        sb.append(".SZE");
-        return sb.toString();
     }
 
 }
