@@ -15,7 +15,7 @@ import java.net.URL;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ResourceBundle;
 
-public class HallgatoTabController implements Initializable {
+public class StudentsTabController implements Initializable {
 
     private final StudentDAO studentDAO = new StudentDAO();
 
@@ -36,7 +36,7 @@ public class HallgatoTabController implements Initializable {
     public TableColumn<Student, Short> colYear;
     public TableColumn<Student, String> colEmail;
 
-    public HallgatoTabController() {}
+    public StudentsTabController() {}
 
     @FXML
     public void handleButtonEvent(ActionEvent event) {
@@ -112,6 +112,7 @@ public class HallgatoTabController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Egyik mező sem lehet üres hallgató adatainak frissítésénél.");
             alert.setHeaderText("Hiányzó adatok!");
             alert.show();
+            return;
         }
         studentDAO.updateStudent(tfEtrCode.getText(), tfFirstName.getText(), tfLastName.getText(), tfMajor.getText(),
             Short.parseShort(tfYear.getText()), tfEmail.getText());

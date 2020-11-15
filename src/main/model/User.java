@@ -1,7 +1,7 @@
 package main.model;
 
 public class User {
-    private String etr_code;
+    private String etrCode;
     private String firstName;
     private String lastName;
     private String email;
@@ -15,19 +15,19 @@ public class User {
         this.email = email;
     }
 
-    public User(String etr_code, String firstName, String lastName, String email) {
-        this.etr_code = etr_code;
+    public User(String etrCode, String firstName, String lastName, String email) {
+        this.etrCode = etrCode;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public String getEtr_code() {
-        return etr_code;
+    public String getEtrCode() {
+        return etrCode;
     }
 
-    public void setEtr_code(String etr_code) {
-        this.etr_code = etr_code;
+    public void setEtrCode(String etrCode) {
+        this.etrCode = etrCode;
     }
 
     public String getFirstName() {
