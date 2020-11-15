@@ -1,6 +1,4 @@
--- teszt adatbázis a GUI-hoz (ListView, TableView)
-
-# CREATE DATABASE IF NOT EXISTS etr;
+CREATE DATABASE IF NOT EXISTS etr;
 
 USE etr;
 
@@ -153,6 +151,10 @@ VALUES
 #        hallgatók
        ('NAKYAAT.SZE', 'Nagy', 'Kristóf', 'nagy.kristof@gmail.com'),
        ('JUDYAAT.SZE', 'Juhász', 'Dániel', 'juh.dan@gmail.com'),
+       ('LAAYAAT.SZE', 'László', 'Alexandra', 'laszlo.alexandra@gmail.com'),
+       ('JUBYAAT.SZE', 'Juhász', 'Bence', 'bencebtgk@gmail.com'),
+       ('TOBYAAT.SZE', 'Tóth', 'Bálint', 'bobo@gmail.com'),
+       ('MUAYAAT.SZE', 'Murvai', 'Adrián', 'macska@gmail.com'),
        ('VUKYAAT.SZE', 'Vukovic', 'Krisztina', 'vukriszt@gmail.com'),
        ('KIOYAAT.SZE', 'Kiss', 'Olivér', 'K.Oliver.XCVII@gmail.com'),
        ('ADAYAAT.SZE', 'Adamov', 'Afrodita', 'picilady97@gmail.com'),
@@ -163,7 +165,12 @@ VALUES
        ('GEAYAAT.SZE', 'Gergely', 'Árpád László', 'gergal@physx.u-szeged.com'),
        ('SZGYAAT.SZE', 'Szabó', 'Gábor', 'gszabo@physx.u-szeged.hu'),
        ('IGFYAAT.SZE', 'Ignácz', 'Ferenc', 'ignacz@physx.u-szeged.hu'),
-       ('HOZYAAT.SZE', 'Horváth', 'Zoltán', 'z.horvath@physx.u-szeged.hu')
+       ('HOZYAAT.SZE', 'Horváth', 'Zoltán', 'z.horvath@physx.u-szeged.hu'),
+       ('FELYAAT.SZE', 'Fehér', 'László', 'lfeher@phyx.u-szeged.hu'),
+       ('BEMYAAT.SZE', 'Benedict', 'Mihály', 'benedict@physx.u-szeged.hu'),
+       ('GYIYAAT.SZE', 'Gyémánt', 'Iván', 'gyemant@physx.u-szeged.hu'),
+       ('GOTYAAT.SZE', 'Görbe', 'Tamás Ferenc', 'tfgorbe@physx.u-szeged.hu'),
+       ('IGFYABT.SZE', 'Iglói', 'Ferenc', 'igloi@szfki.hu')
 #        informatikusok
        ;
 
@@ -179,7 +186,12 @@ VALUES
        ('ADAYAAT.SZE', 'Fizika BSc', '2016'),
        ('ARFYAAT.SZE', 'Fizika BSc', '2016'),
        ('TOPYAAT.SZE', 'Fizika BSc', '2016'),
-       ('VABYAAT.SZE', 'Fizika BSc', '2016');
+       ('VABYAAT.SZE', 'Fizika BSc', '2016'),
+       ('LAAYAAT.SZE', 'Fizika BSc', '2016'),
+       ('JUBYAAT.SZE', 'Fizika BSc', '2016'),
+       ('TOBYAAT.SZE', 'Fizika BSc', '2016'),
+       ('MUAYAAT.SZE', 'Fizika BSc', '2016')
+       ;
 
 DELETE FROM oktato WHERE TRUE;
 
@@ -187,7 +199,12 @@ INSERT INTO oktato
 VALUES ('GEAYAAT.SZE', 'Optikai és Kvantumelekronikai Tanszék'),
        ('IGFYAAT.SZE', 'Optikai és Kvantumelekronikai Tanszék'),
        ('HOZYAAT.SZE', 'Optikai és Kvantumelekronikai Tanszék'),
-       ('SZGYAAT.SZE', 'Elméleti Fizikai Tanszék')
+       ('SZGYAAT.SZE', 'Elméleti Fizikai Tanszék'),
+       ('FELYAAT.SZE', 'Elméleti Fizikai Tanszék'),
+       ('BEMYAAT.SZE', 'Elméleti Fizikai Tanszék'),
+       ('GYIYAAT.SZE', 'Elméleti Fizikai Tanszék'),
+       ('GOTYAAT.SZE', 'Elméleti Fizikai Tanszék'),
+       ('IGFYABT.SZE', 'Elméleti Fizikai Tanszék')
        ;
 
 delete from kurzus where true;
@@ -202,7 +219,13 @@ VALUES ('FBN101E', 4, FALSE, 'Mechanika', 'SZGYAAT.SZE'),
        ('FBN311E', 3, FALSE, 'Elméleti Mechanika', 'HOZYAAT.SZE'),
        ('FBN311G', 1, TRUE, 'Elméleti Mechanika', 'HOZYAAT.SZE'),
        ('FBN414E', 2, FALSE, 'Elektromágnesség és relativitáselmélet', 'GEAYAAT.SZE'),
-       ('FBN414G', 1, TRUE, 'Elektromágnesség és relativitáselmélet', 'GEAYAAT.SZE')
+       ('FBN414G', 1, TRUE, 'Elektromágnesség és relativitáselmélet', 'GEAYAAT.SZE'),
+       ('FMBN108E', 2, FALSE, 'Lineáris algebra fizikusoknak', 'FELYAAT.SZE'),
+       ('FMBN108G', 2, TRUE, 'Lineáris algebra fizikusoknak', 'FELYAAT.SZE'),
+       ('FBN218E', 2, FALSE, 'Matematikai módszerek a fizikában', 'GOTYAAT.SZE'),
+       ('FBN218G', 2, TRUE, 'Matematikai módszerek a fizikában gy.', 'GOTYAAT.SZE'),
+       ('FBN513E', 3, FALSE, 'Statisztikus fizika alapjai', 'IGFYABT.SZE'),
+       ('FBN513G', 2, TRUE, 'Statisztikus fizika alapjai gyakorlat', 'IGFYABT.SZE')
        ;
 
 delete from elofeltetele where true;
@@ -211,7 +234,8 @@ insert into elofeltetele
 values ('FBN202E', 'FBN101E'), /* hullámtan <-- mechanika */
        ('FBN304E', 'FBN202E'), /* elektro <-- hullámtan */
        ('FBN414E', 'FBN304E'), /* relativitás <-- elektro */
-       ('FBN414E', 'FBN311E'); /* relativitás <-- elm mecha */
+       ('FBN414E', 'FBN311E'), /* relativitás <-- elm mecha */
+       ('FBN513E', 'FBN218E') /* statfiz <-- matmód */
        ;
 
 delete from terem where true;
@@ -221,9 +245,9 @@ values
 #        fizikás termek
        ('DOMFI', '101', false, 150),
        ('BOFI', '203', false, 60),
-       ('BOFI', '204', false, 60),
+       ('BOFI', '204', false, 70),
        ('BOFI', '205', false, 60),
-       ('BOFI', '206', false, 60)
+       ('BOFI', '206', false, 70)
        ;
 
 delete from tanora where true;
@@ -244,7 +268,14 @@ values
        (2017, 1, 'kedd', '12:00', '14:00', 50, 'FBN311G', 'BOFI', '205'),
        (2017, 1, 'kedd', '12:00', '14:00', 50, 'FBN311G', 'BOFI', '206'),
        (2017, 2, 'szerda', '14:00', '16:00', 50, 'FBN414E', 'BOFI', '205'), /* rel elm */
-       (2017, 2, 'hétfő', '12:00', '14:00', 50, 'FBN414G', 'BOFI', '203')
+       (2017, 2, 'hétfő', '8:00', '10:00', 50, 'FBN414G', 'BOFI', '203'),
+       (2016, 1, 'hétfő', '10:00', '12:00', 100, 'FMBN108E', 'BOFI', '205'), /* linalg */
+       (2016, 1, 'kedd', '16:00', '18:00', 50, 'FMBN108G', 'BOFI', '203'),
+       (2016, 1, 'kedd', '8:00', '10:00', 50, 'FMBN108G', 'BOFI', '204'),
+       (2017, 1, 'péntek', '13:00', '14:00', 60, 'FBN218E', 'BOFI', '204'), /* matmód */
+       (2017, 1, 'csütörtök', '10:00', '12:00', 50, 'FBN218G', 'BOFI', '205'),
+       (2018, 1, 'szerda', '18:00', '20:00', 50, 'FBN513E', 'BOFI', '206'), /* statfiz */
+       (2018, 1, 'kedd', '12:00', '14:00', 50, 'FBN513G', 'BOFI', '204')
        ;
 
 delete from tart where true;
@@ -267,29 +298,50 @@ values
        ('IGFYAAT.SZE', 2017, 1, 'kedd', '12:00', 'BOFI', '205'),
        ('HOZYAAT.SZE', 2017, 1, 'kedd', '12:00', 'BOFI', '206'),
        ('GEAYAAT.SZE', 2017, 2, 'szerda', '14:00', 'BOFI', '205'), /* rel elm */
-       ('GEAYAAT.SZE', 2017, 2, 'hétfő', '12:00', 'BOFI', '203')
+       ('GEAYAAT.SZE', 2017, 2, 'hétfő', '8:00', 'BOFI', '203'),
+       ('FELYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'BOFI', '205'), /* linalg */
+       ('FELYAAT.SZE', 2016, 1, 'kedd', '16:00', 'BOFI', '203'),
+       ('FELYAAT.SZE', 2016, 1, 'kedd', '8:00', 'BOFI', '204'),
+       ('GOTYAAT.SZE', 2017, 1, 'péntek', '13:00', 'BOFI', '204'), /* matmód */
+       ('GOTYAAT.SZE', 2017, 1, 'csütörtök', '10:00', 'BOFI', '205'),
+       ('IGFYABT.SZE', 2018, 1, 'szerda', '18:00', 'BOFI', '206'), /* statfiz */
+       ('IGFYABT.SZE', 2018, 1, 'kedd', '12:00', 'BOFI', '204')
        ;
 
 insert into felvett
 values
+#        Ferenc
        (5, 'ARFYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'DOMFI', '101'), /* mecha */
        (5, 'ARFYAAT.SZE', 2016, 1, 'szerda', '12:00', 'BOFI', '203'),
        (5, 'ARFYAAT.SZE', 2016, 2, 'kedd', '10:00', 'DOMFI', '101'), /* hullámtan */
-       (5, 'ARFYAAT.SZE', 2016, 2, 'csütörtök', '13:00', 'BOFI', '204'),
+       (5, 'ARFYAAT.SZE', 2016, 2, 'csütörtök', '14:00', 'BOFI', '204'),
        (5, 'ARFYAAT.SZE', 2017, 1, 'péntek', '10:00', 'DOMFI', '101'), /* elektro */
-       (5, 'ARFYAAT.SZE', 2017, 1, 'szerda', '12:00','BOFI', '206'),
+       (5, 'ARFYAAT.SZE', 2017, 1, 'kedd', '14:00', 'BOFI', '204'),
        (5, 'ARFYAAT.SZE', 2017, 1, 'hétfő', '12:00', 'DOMFI', '101'), /* elm mecha */
-       (5, 'ARFYAAT.SZE', 2017, 1, 'kedd', '12:00', 'BOFI', '205'),
+       (4, 'ARFYAAT.SZE', 2017, 1, 'kedd', '12:00', 'BOFI', '205'),
        (5, 'ARFYAAT.SZE', 2017, 2, 'szerda', '14:00', 'BOFI', '205'), /* rel elm */
-       (5, 'ARFYAAT.SZE', 2017, 2, 'hétfő', '12:00', 'BOFI', '203'),
-       (5, 'TOPYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'DOMFI', '101'), /* mecha */
-       (4, 'TOPYAAT.SZE', 2016, 1, 'szerda', '12:00', 'BOFI', '203'),
+       (5, 'ARFYAAT.SZE', 2017, 2, 'hétfő', '8:00', 'BOFI', '203'),
+       (4, 'ARFYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'BOFI', '205'), /* linalg */
+       (5, 'ARFYAAT.SZE', 2016, 1, 'kedd', '8:00', 'BOFI', '204'),
+       (5, 'ARFYAAT.SZE', 2017, 1, 'péntek', '13:00', 'BOFI', '204'), /* matmód */
+       (4, 'ARFYAAT.SZE', 2017, 1, 'csütörtök', '10:00', 'BOFI', '205'),
+       (4, 'ARFYAAT.SZE', 2018, 1, 'szerda', '18:00', 'BOFI', '206'), /* statfiz */
+       (5, 'ARFYAAT.SZE', 2018, 1, 'kedd', '12:00', 'BOFI', '204'),
+       (3, 'TOPYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'DOMFI', '101'), /* mecha */
+       (2, 'TOPYAAT.SZE', 2016, 1, 'szerda', '12:00', 'BOFI', '203'),
        (4, 'TOPYAAT.SZE', 2016, 2, 'kedd', '10:00', 'DOMFI', '101'), /* hullámtan */
-       (3, 'TOPYAAT.SZE', 2016, 2, 'csütörtök', '13:00', 'BOFI', '204'),
+       (3, 'TOPYAAT.SZE', 2016, 2, 'csütörtök', '14:00', 'BOFI', '204'),
        (4, 'TOPYAAT.SZE', 2017, 1, 'péntek', '10:00', 'DOMFI', '101'), /* elektro */
-       (4, 'TOPYAAT.SZE', 2017, 1, 'szerda', '12:00','BOFI', '206'),
-       (2, 'TOPYAAT.SZE', 2017, 1, 'hétfő', '12:00', 'DOMFI', '101'), /* elm mecha */
-       (5, 'TOPYAAT.SZE', 2017, 1, 'kedd', '12:00', 'BOFI', '205'),
+       (3, 'TOPYAAT.SZE', 2017, 1, 'kedd', '14:00', 'BOFI', '204'),
+       (3, 'TOPYAAT.SZE', 2017, 1, 'hétfő', '12:00', 'DOMFI', '101'), /* elm mecha */
+       (2, 'TOPYAAT.SZE', 2017, 1, 'kedd', '12:00', 'BOFI', '205'),
        (4, 'TOPYAAT.SZE', 2017, 2, 'szerda', '14:00', 'BOFI', '205'), /* rel elm */
-       (5, 'TOPYAAT.SZE', 2017, 2, 'hétfő', '12:00', 'BOFI', '203')
+       (5, 'TOPYAAT.SZE', 2017, 2, 'hétfő', '8:00', 'BOFI', '203'),
+       (4, 'TOPYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'BOFI', '205'), /* linalg */
+       (4, 'TOPYAAT.SZE', 2016, 1, 'kedd', '8:00', 'BOFI', '204'),
+       (3, 'TOPYAAT.SZE', 2017, 1, 'péntek', '13:00', 'BOFI', '204'), /* matmód */
+       (3, 'TOPYAAT.SZE', 2017, 1, 'csütörtök', '10:00', 'BOFI', '205'),
+       (3, 'TOPYAAT.SZE', 2018, 1, 'szerda', '18:00', 'BOFI', '206'), /* statfiz */
+       (4, 'TOPYAAT.SZE', 2018, 1, 'kedd', '12:00', 'BOFI', '204')
        ;
+
