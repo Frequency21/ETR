@@ -12,11 +12,12 @@ import main.dao.StudentDAO;
 import main.model.Student;
 
 import java.net.URL;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-    private final StudentDAO repo = new StudentDAO();
+    private final StudentDAO studentDAO = new StudentDAO();
 
     public TextField tfEtrCode;
     public TextField tfFirstName;
@@ -51,7 +52,7 @@ public class MainController implements Initializable {
     }
 
     void showStudents() {
-        ObservableList<Student> students = FXCollections.observableArrayList(repo.getStudents());
+        ObservableList<Student> students = FXCollections.observableArrayList(studentDAO.getStudents());
         colEtr.setCellValueFactory(new PropertyValueFactory<>("etrCode"));
         colFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         colLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
@@ -71,25 +72,63 @@ public class MainController implements Initializable {
      */
 
     public void insertRecord(ActionEvent event) {
-        if(tfEtrCode.getText().isEmpty() ||
+        if (tfFirstName.getText().isEmpty() ||
+            tfLastName.getText().isEmpty() ||
+            tfMajor.getText().isEmpty() ||
+            tfYear.getText().isEmpty() ||
+            tfEmail.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Az ETR-kód mező kivételével egyik mező sem lehet üres" +
+                " új hallgató felvételénél.");
+            alert.setHeaderText("Hiányzó adatok!");
+            alert.show();
+            return;
+        } else if (tfFirstName.getText().length() < 2) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "A vezetéknévnek legalább két karakter hosszúnak kell lennie.");
+            alert.setHeaderText("Hibás vezetéknév!");
+            alert.show();
+            return;
+        }
+        try {
+            studentDAO.addStudent(tfFirstName.getText(), tfLastName.getText(), tfMajor.getText(),
+                Short.parseShort(tfYear.getText()), tfEmail.getText());
+        } catch (SQLIntegrityConstraintViolationException throwables) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Hallgató felvétele");
+            alert.setHeaderText("Az email cím már regisztrálva van a rendszerben");
+            alert.show();
+            return;
+        }
+        clear();
+        showStudents();
+    }
+
+    public void updateRecord(ActionEvent event) {
+        if (tfEtrCode.getText().isEmpty() ||
             tfFirstName.getText().isEmpty() ||
             tfLastName.getText().isEmpty() ||
             tfMajor.getText().isEmpty() ||
             tfYear.getText().isEmpty() ||
             tfEmail.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Egyik mező sem lehet üres új rekord beszúrásánál.");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Egyik mező sem lehet üres hallgató adatainak frissítésénél.");
+            alert.setHeaderText("Hiányzó adatok!");
             alert.show();
         }
-
+        studentDAO.updateStudent(tfEtrCode.getText(), tfFirstName.getText(), tfLastName.getText(), tfMajor.getText(),
+            Short.parseShort(tfYear.getText()), tfEmail.getText());
         clear();
-    }
-
-    public void updateRecord(ActionEvent event) {
-        System.out.println("Énis");
+        showStudents();
     }
 
     public void deleteRecord(ActionEvent event) {
-        System.out.println("Énis");
+        if (tfEtrCode.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Törléshez add meg a hallgató ETR kódját.");
+            alert.setHeaderText("Hiányzó adatok!");
+            alert.show();
+            return;
+        }
+        studentDAO.deleteStudent(tfEtrCode.getText());
+        clear();
+        showStudents();
     }
 
     public void selectRecord(MouseEvent mouseEvent) {

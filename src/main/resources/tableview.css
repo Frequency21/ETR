@@ -35,6 +35,10 @@
     -fx-padding: 0.0em;
 }
 
+.table-row-cell:selected .text {
+    -fx-fill: red;
+}
+
 /* scrollbars */
 .table-view .virtual-flow .scroll-bar:vertical,
 .table-view .virtual-flow .scroll-bar:vertical .track,
