@@ -12,4 +12,10 @@
     <Tab fx:id="teachersTab" closable="false" text="Oktatók">
         <fx:include source="TeachersTab.fxml"/>
     </Tab>
+    <Tab fx:id="coursesTab" closable="false" text="Kurzusok">
+        <fx:include source="CoursesTab.fxml"/>
+    </Tab>
+    <Tab fx:id="lecturesTab" closable="false" text="Tanórák">
+        <fx:include source="LecturesTab.fxml"/>
+    </Tab>
 </TabPane>

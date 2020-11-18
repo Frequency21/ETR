@@ -1,0 +1,18 @@
+.table-view .column-header-background{
+    -fx-background-color: linear-gradient(to bottom, #fc575e80, #90d5ec80);
+    -fx-background-radius: 0px 0px 0px 0px;
+    -fx-background-insets: 0 10px 0 0;
+    -fx-padding: 3px 0 3px 0;
+}
+
+.table-row-cell:odd{
+    -fx-background-color: #90d5ec10;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+
+.table-row-cell:even{
+    -fx-background-color: #fc575e11;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}

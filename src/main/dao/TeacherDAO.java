@@ -18,7 +18,7 @@ public class TeacherDAO extends DAO {
     }
 
     public List<Teacher> getTeachersForName(String firstName, String lastName) {
-        String sql = "SELECT * FROM oktato WHERE vnev like ? AND knev like ?";
+        String sql = "SELECT * FROM felhasznalo WHERE vnev like ? AND knev like ?";
         List<Teacher> teachers = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -151,8 +151,8 @@ public class TeacherDAO extends DAO {
                 rs.getString("etr_kod"),
                 rs.getString("vnev"),
                 rs.getString("knev"),
-                rs.getString("tanszek"),
-                rs.getString("email")
+                rs.getString("email"),
+                rs.getString("tanszek")
             );
         } catch (SQLException throwables) {
             throwables.printStackTrace();
