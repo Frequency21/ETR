@@ -72,6 +72,14 @@ CREATE TABLE IF NOT EXISTS `elofeltetele`
   DEFAULT CHARSET = utf8
   COLLATE = utf8_hungarian_ci;
 
+ALTER TABLE elofeltetele DROP CONSTRAINT elofeltetele_ibfk_1;
+ALTER TABLE elofeltetele DROP CONSTRAINT elofeltetele_ibfk_2;
+
+ALTER TABLE elofeltetele ADD CONSTRAINT FOREIGN KEY (kurzus_kod) REFERENCES kurzus (kurzus_kod)
+    ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE elofeltetele ADD CONSTRAINT FOREIGN KEY (kurzus_kod_felt) REFERENCES kurzus (kurzus_kod)
+    ON DELETE CASCADE ON UPDATE CASCADE;
+
 CREATE TABLE IF NOT EXISTS `terem`
 (
     epulet_kod  VARCHAR(10) NOT NULL,
@@ -345,3 +353,71 @@ values
        (4, 'TOPYAAT.SZE', 2018, 1, 'kedd', '12:00', 'BOFI', '204')
        ;
 
+/*
+hallgato -> felvett -> tanora -> kurzus
+    select on etr_code
+                select on kurzus_kod
+*/
+
+select f.etr_kod, f2.vnev, f2.knev, avg(erdemjegy) as atlag, sum(kredit_ertek) as `ossz kredit` from felvett as f
+inner join tanora t on
+f.ev = t.ev and f.felev = t.felev and t.nap = f.nap and t.kezdes = f.kezdes and
+f.epulet_kod = t.epulet_kod and f.terem_kod = t.terem_kod
+inner join kurzus k on t.kurzus_kod = k.kurzus_kod
+left join felhasznalo f2 on f.etr_kod = f2.etr_kod
+group by f.etr_kod;
+
+select */*hallgato.etr_kod, vnev, knev, tanora.kurzus_kod*/
+from felhasznalo
+natural join hallgato
+natural join felvett
+natural join tanora
+left join kurzus k on k.kurzus_kod = tanora.kurzus_kod
+order by hallgato.etr_kod
+;
+
+select * from oktato o
+inner join tart t on o.etr_kod = t.etr_kod
+inner join tanora tan on
+t.ev = tan.ev and t.felev = tan.felev and t.nap = tan.nap and
+t.kezdes = tan.kezdes and t.epulet_kod = tan.epulet_kod and t.terem_kod = tan.terem_kod
+;
+
+/*
+ Melyik oktató milyen órákat tart
+ */
+select etr_kod as `oktato`, ev, felev, nap, kezdes, vegzes, epulet_kod, terem_kod
+from oktato o natural join tart t
+natural join tanora tan
+order by ev, felev, nap, kezdes
+;
+
+/*
+ ugyanez, csak left joinnal
+ */
+select */*tan.kurzus_kod, o.etr_kod as oktató, ev, felev, nap, kezdes, vegzes, epulet_kod, terem_kod*/
+from oktato o natural join tart t
+natural join tanora tan
+left join kurzus k on k.kurzus_kod = tan.kurzus_kod
+order by ev, felev, nap, kezdes
+;
+
+/*
+ Adott évben, félévben és napon hány órát tartottak meg
+ */
+select ev, felev, nap, count(kezdes) as freq
+from oktato o natural join tart t
+natural join tanora tan
+group by ev, felev, nap
+order by ev, felev, nap
+;
+
+/*
+ Adott évben félévben, napon és órában hány óra kezdődött
+ */
+select ev, felev, nap, count(kezdes) as freq
+from oktato o natural join tart t
+natural join tanora tan
+group by ev, felev, nap, kezdes
+order by ev, felev, nap, kezdes
+;
