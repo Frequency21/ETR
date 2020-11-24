@@ -1,5 +1,8 @@
 package main.controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -7,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 import javafx.util.converter.LocalTimeStringConverter;
 import main.dao.LectureDAO;
 import main.model.Lecture;
@@ -33,7 +37,6 @@ public class LecturesTabController implements Initializable {
     public TextField tfBuildingCode;
     public TextField tfRoomCode;
     public Button btnInsert;
-    public Button btnUpdate;
     public Button btnDelete;
     public TableView<Lecture> tvLectures;
 
@@ -48,72 +51,63 @@ public class LecturesTabController implements Initializable {
     public TableColumn<Lecture, String> colRoomCode;
 
     private final ToggleGroup toggleGroup = new ToggleGroup();
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-    private final SpinnerValueFactory<LocalTime> spvfBegin = new SpinnerValueFactory<>() {
-        {setConverter(new LocalTimeStringConverter(formatter, null));}
+    private final SpinnerValueFactory<LocalTime> spvfBegin = new DateSpinnerValueFactory();
+    private final SpinnerValueFactory<LocalTime> spvfEnd = new DateSpinnerValueFactory();
+    private final SpinnerValueFactory<LocalTime> spvfBeginTo = new DateSpinnerValueFactory();
+    private final SpinnerValueFactory<LocalTime> spvfEndTo = new DateSpinnerValueFactory();
 
-        @Override
-        public void decrement(int steps) {
-            if (getValue() == null) setValue(LocalTime.of(8, 0));
-            else {
-                LocalTime time = getValue();
-                if (time.getHour() == 8)
-                    return;
-                setValue(time.minusHours(steps));
-            }
-        }
-
-        @Override
-        public void increment(int steps) {
-            if (this.getValue() == null) setValue(LocalTime.of(8, 0));
-            else {
-                LocalTime time = getValue();
-                if (time.getHour() == 20)
-                    return;
-                setValue(time.plusHours(steps));
-            }
-        }
-    };
-    private final SpinnerValueFactory<LocalTime> spvfEnd = new SpinnerValueFactory<>() {
-        {setConverter(new LocalTimeStringConverter(formatter, null));}
-
-        @Override
-        public void decrement(int steps) {
-            if (getValue() == null) setValue(LocalTime.of(8, 0));
-            else {
-                LocalTime time = getValue();
-                if (time.getHour() == 8)
-                    return;
-                setValue(time.minusHours(steps));
-            }
-        }
-
-        @Override
-        public void increment(int steps) {
-            if (this.getValue() == null) setValue(LocalTime.of(8, 0));
-            else {
-                LocalTime time = getValue();
-                if (time.getHour() == 20)
-                    return;
-                setValue(time.plusHours(steps));
-            }
-        }
-    };
+    public SplitPane splitPane;
+    public Button btnWhich;
+    public Button btnTo;
+    public TextField tfCourseCodeTo;
+    public TextField tfYearTo;
+    private final ToggleGroup toggleGroupTo = new ToggleGroup();
+    public RadioButton rbSemester1To;
+    public RadioButton rbSemester2To;
+    public ChoiceBox<String> cbDayTo;
+    public Spinner<LocalTime> spBeginTo;
+    public Spinner<LocalTime> spEndTo;
+    public TextField tfMaxTo;
+    public TextField tfBuildingCodeTo;
+    public TextField tfRoomCodeTo;
+    public Button btnUpdateTo;
 
     public LecturesTabController() {}
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         cbDay.getItems().addAll("hétfő", "kedd", "szerda", "csütörtök", "péntek");
+        cbDayTo.getItems().addAll("hétfő", "kedd", "szerda", "csütörtök", "péntek");
         toggleGroup.getToggles().add(rbSemester1);
         toggleGroup.getToggles().add(rbSemester2);
+        toggleGroupTo.getToggles().add(rbSemester1To);
+        toggleGroupTo.getToggles().add(rbSemester2To);
         rbSemester1.setSelected(true);
+        rbSemester1To.setSelected(true);
         // add valueFactory for spinners
         spBegin.setValueFactory(spvfBegin);
         spEnd.setValueFactory(spvfEnd);
         spvfBegin.setValue(LocalTime.of(8, 0));
         spvfEnd.setValue(LocalTime.of(8, 0));
+        spBeginTo.setValueFactory(spvfBeginTo);
+        spEndTo.setValueFactory(spvfEndTo);
+        spvfBeginTo.setValue(LocalTime.of(8, 0));
+        spvfEndTo.setValue(LocalTime.of(8, 0));
         showLectures();
+
+        // splitpane
+        btnWhich.setOnAction(e -> {
+            KeyValue keyValue = new KeyValue(splitPane.getDividers().get(0).positionProperty(), 0);
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500), keyValue));
+            timeline.play();
+        });
+
+        btnTo.setOnAction(e -> {
+            KeyValue keyValue = new KeyValue(splitPane.getDividers().get(0).positionProperty(), 1);
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500), keyValue));
+            timeline.play();
+        });
+
     }
 
     void showLectures() {
@@ -183,10 +177,12 @@ public class LecturesTabController implements Initializable {
             alert.show();
             return;
         }
-        lectureDAO.updateLecture(Short.parseShort(tfYear.getText()), (byte) (rbSemester1.isSelected() ? 1 : 2),
-            cbDay.getValue(), spBegin.getValue(), spEnd.getValue(), Short.parseShort(tfMax.getText()),
-            tfCourseCode.getText(), tfBuildingCode.getText(), tfRoomCode.getText());
-        clear();
+        lectureDAO.updateLecture(Short.parseShort(tfYearTo.getText()), (byte) (rbSemester1To.isSelected() ? 1 : 2),
+            cbDayTo.getValue(), spBeginTo.getValue(), spEndTo.getValue(), Short.parseShort(tfMaxTo.getText()),
+            tfCourseCodeTo.getText(), tfBuildingCodeTo.getText(), tfRoomCodeTo.getText(),
+            Short.parseShort(tfYear.getText()), (byte) (rbSemester1.isSelected() ? 1 : 2),
+            cbDay.getValue(), spBegin.getValue(), tfBuildingCode.getText(), tfRoomCode.getText());
+//        clear();
         showLectures();
     }
 
@@ -213,6 +209,16 @@ public class LecturesTabController implements Initializable {
 
     public void selectRecord(MouseEvent mouseEvent) {
         Lecture lecture = tvLectures.getSelectionModel().getSelectedItem();
+        setFields(lecture, tfCourseCode, tfYear, rbSemester1, rbSemester2, cbDay, spvfBegin,
+            spvfEnd, tfMax, tfBuildingCode, tfRoomCode);
+        // same for other pane
+        setFields(lecture, tfCourseCodeTo, tfYearTo, rbSemester1To, rbSemester2To, cbDayTo,
+            spvfBeginTo, spvfEndTo, tfMaxTo, tfBuildingCodeTo, tfRoomCodeTo);
+    }
+
+    private void setFields(Lecture lecture, TextField tfCourseCode, TextField tfYear, RadioButton rbSemester1,
+                           RadioButton rbSemester2, ChoiceBox<String> cbDay, SpinnerValueFactory<LocalTime> spvfBegin,
+                           SpinnerValueFactory<LocalTime> spvfEnd, TextField tfMax, TextField tfBuildingCode, TextField tfRoomCode) {
         tfCourseCode.setText(lecture.getCourseCode());
         tfYear.setText("" + lecture.getYear());
         if (lecture.getSemester() == 1)
@@ -227,6 +233,7 @@ public class LecturesTabController implements Initializable {
         tfRoomCode.setText(lecture.getRoomCode());
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void clear() {
         tfCourseCode.clear();
         tfYear.clear();
@@ -238,6 +245,42 @@ public class LecturesTabController implements Initializable {
         tfMax.clear();
         tfBuildingCode.clear();
         tfRoomCode.clear();
+        tfCourseCodeTo.clear();
+        tfYearTo.clear();
+        rbSemester1To.setSelected(false);
+        rbSemester2To.setSelected(false);
+        cbDayTo.setValue(null);
+        spvfBeginTo.setValue(null);
+        spvfEndTo.setValue(null);
+        tfMaxTo.clear();
+        tfBuildingCodeTo.clear();
+        tfRoomCodeTo.clear();
     }
 
+}
+
+class DateSpinnerValueFactory extends SpinnerValueFactory<LocalTime> {
+    {setConverter(new LocalTimeStringConverter(DateTimeFormatter.ofPattern("HH:mm"), null));}
+
+    @Override
+    public void decrement(int steps) {
+        if (getValue() == null) setValue(LocalTime.of(8, 0));
+        else {
+            LocalTime time = getValue();
+            if (time.getHour() == 8)
+                return;
+            setValue(time.minusHours(steps));
+        }
+    }
+
+    @Override
+    public void increment(int steps) {
+        if (this.getValue() == null) setValue(LocalTime.of(8, 0));
+        else {
+            LocalTime time = getValue();
+            if (time.getHour() == 20)
+                return;
+            setValue(time.plusHours(steps));
+        }
+    }
 }

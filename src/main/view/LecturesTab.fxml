@@ -20,107 +20,193 @@
 
 <AnchorPane prefHeight="580.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.LecturesTabController">
     <SplitPane dividerPositions="0.3" layoutX="26.0" layoutY="193.0" prefHeight="580.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <AnchorPane minHeight="0.0" minWidth="290.0" prefHeight="600.0" prefWidth="290.0" SplitPane.resizableWithParent="false">
-            <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                <HBox alignment="TOP_CENTER" prefHeight="219.0" prefWidth="279.0" spacing="10.0">
-                    <padding>
-                        <Insets top="50.0" />
-                    </padding>
-                    <VBox alignment="TOP_RIGHT" prefHeight="286.0" prefWidth="108.0" spacing="10.0">
-                  <Label layoutX="96.0" layoutY="10.0" text="kurzus kód:">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                        <Label text="év:">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label layoutX="10.0" layoutY="10.0" text="félév:">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label layoutX="10.0" layoutY="27.0" text="nap:">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label layoutX="10.0" layoutY="44.0" text="kezdés:">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label text="végzés:">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label text="max létszám:">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                  <Label layoutX="54.0" layoutY="158.0" text="épület kód:">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="13.0" layoutY="195.0" text="terem kód:">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                    </VBox>
-                    <VBox prefHeight="136.0" prefWidth="130.0" spacing="12.0">
-                  <TextField fx:id="tfCourseCode" />
-                        <TextField id="tfId" fx:id="tfYear" />
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
-                            <RadioButton fx:id="rbSemester1" mnemonicParsing="false" text="1" />
-                            <RadioButton fx:id="rbSemester2" mnemonicParsing="false" text="2" />
-                        </HBox>
-                  <ChoiceBox fx:id="cbDay" prefWidth="150.0" />
-                  <Spinner fx:id="spBegin" />
-                  <Spinner fx:id="spEnd" layoutX="10.0" layoutY="113.0" />
-                        <TextField id="tfSzak" fx:id="tfMax" layoutX="10.0" layoutY="35.0" />
-                        <TextField id="tfSzak" fx:id="tfBuildingCode" layoutX="10.0" layoutY="121.0" />
-                        <TextField id="tfSzak" fx:id="tfRoomCode" layoutX="10.0" layoutY="162.0" />
-                    </VBox>
-                </HBox>
-                <VBox alignment="TOP_CENTER" prefWidth="321.0" VBox.vgrow="SOMETIMES">
-                    <padding>
-                        <Insets bottom="150.0" />
-                    </padding>
-                    <HBox alignment="TOP_CENTER" spacing="12.0">
-                        <VBox.margin>
-                            <Insets top="20.0" />
-                        </VBox.margin>
-                        <Button fx:id="btnInsert" alignment="CENTER" mnemonicParsing="false" onAction="#insertRecord" text="hozzáadás">
-                            <graphic>
-                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                                    <Image url="@../resources/add_24px.png" />
-                                </ImageView>
-                            </graphic>
-                        </Button>
-                        <Button fx:id="btnUpdate" alignment="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#updateRecord" text="frissítés">
-                            <graphic>
-                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                                    <Image url="@../resources/update_left_rotation_24px.png" />
-                                </ImageView>
-                            </graphic>
-                        </Button>
-                        <Button fx:id="btnDelete" alignment="CENTER" layoutX="63.0" layoutY="10.0" mnemonicParsing="false" onAction="#deleteRecord" text="törlés" textAlignment="CENTER">
-                            <graphic>
-                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                                    <Image url="@../resources/delete_bin_24px.png" />
-                                </ImageView>
-                            </graphic>
-                        </Button>
+        <SplitPane fx:id="splitPane" dividerPositions="1.0" orientation="VERTICAL" SplitPane.resizableWithParent="false">
+            <AnchorPane minHeight="0.0" minWidth="290.0" prefHeight="600.0" prefWidth="290.0">
+                <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <HBox alignment="TOP_CENTER" prefHeight="219.0" prefWidth="279.0" spacing="10.0">
+                        <VBox alignment="TOP_RIGHT" prefHeight="286.0" prefWidth="108.0" spacing="10.0">
+                            <Label layoutX="96.0" layoutY="10.0" text="kurzus kód:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label text="év:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="10.0" layoutY="10.0" text="félév:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="10.0" layoutY="27.0" text="nap:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="10.0" layoutY="44.0" text="kezdés:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label text="végzés:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label text="max létszám:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="54.0" layoutY="158.0" text="épület kód:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="13.0" layoutY="195.0" text="terem kód:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                        </VBox>
+                        <VBox prefHeight="136.0" prefWidth="130.0" spacing="12.0">
+                            <TextField fx:id="tfCourseCode" />
+                            <TextField id="tfId" fx:id="tfYear" />
+                            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
+                                <RadioButton fx:id="rbSemester1" mnemonicParsing="false" text="1" />
+                                <RadioButton fx:id="rbSemester2" mnemonicParsing="false" text="2" />
+                            </HBox>
+                            <ChoiceBox fx:id="cbDay" prefWidth="150.0" />
+                            <Spinner fx:id="spBegin" />
+                            <Spinner fx:id="spEnd" layoutX="10.0" layoutY="113.0" />
+                            <TextField id="tfSzak" fx:id="tfMax" layoutX="10.0" layoutY="35.0" />
+                            <TextField id="tfSzak" fx:id="tfBuildingCode" layoutX="10.0" layoutY="121.0" />
+                            <TextField id="tfSzak" fx:id="tfRoomCode" layoutX="10.0" layoutY="162.0" />
+                        </VBox>
+                  <padding>
+                     <Insets top="50.0" />
+                  </padding>
                     </HBox>
+                    <VBox alignment="TOP_CENTER" prefWidth="321.0" VBox.vgrow="SOMETIMES">
+                        <padding>
+                            <Insets bottom="150.0" />
+                        </padding>
+                        <VBox alignment="TOP_CENTER" spacing="15.0">
+                            <VBox.margin>
+                                <Insets top="20.0" />
+                            </VBox.margin>
+                            <HBox alignment="TOP_CENTER" spacing="12.0">
+                                <Button fx:id="btnInsert" alignment="CENTER" mnemonicParsing="false" onAction="#insertRecord" text="hozzáadás">
+                                    <graphic>
+                                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                            <Image url="@../resources/add_24px.png" />
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+                                <Button fx:id="btnDelete" alignment="CENTER" layoutX="63.0" layoutY="10.0" mnemonicParsing="false" onAction="#deleteRecord" text="törlés" textAlignment="CENTER">
+                                    <graphic>
+                                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                            <Image url="@../resources/delete_bin_24px.png" />
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+                            </HBox>
+                             <Button fx:id="btnWhich" alignment="CENTER" mnemonicParsing="false" onAction="#deleteRecord" text="mit" textAlignment="CENTER" />
+                        </VBox>
+                    </VBox>
                 </VBox>
-            </VBox>
-        </AnchorPane>
+            </AnchorPane>
+            <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="290.0" prefHeight="600.0" prefWidth="290.0">
+                <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <HBox alignment="TOP_CENTER" prefHeight="219.0" prefWidth="279.0" spacing="10.0">
+                        <padding>
+                            <Insets top="50.0" />
+                        </padding>
+                        <VBox alignment="TOP_RIGHT" prefHeight="286.0" prefWidth="108.0" spacing="10.0">
+                            <Label layoutX="96.0" layoutY="10.0" text="kurzus kód:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label text="év:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="10.0" layoutY="10.0" text="félév:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="10.0" layoutY="27.0" text="nap:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="10.0" layoutY="44.0" text="kezdés:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label text="végzés:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label text="max létszám:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="54.0" layoutY="158.0" text="épület kód:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="13.0" layoutY="195.0" text="terem kód:">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
+                        </VBox>
+                        <VBox prefHeight="136.0" prefWidth="130.0" spacing="12.0">
+                            <TextField fx:id="tfCourseCodeTo" />
+                            <TextField id="tfId" fx:id="tfYearTo" />
+                            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
+                                <RadioButton fx:id="rbSemester1To" mnemonicParsing="false" text="1" />
+                                <RadioButton fx:id="rbSemester2To" mnemonicParsing="false" text="2" />
+                            </HBox>
+                            <ChoiceBox fx:id="cbDayTo" prefWidth="150.0" />
+                            <Spinner fx:id="spBeginTo" />
+                            <Spinner fx:id="spEndTo" layoutX="10.0" layoutY="113.0" />
+                            <TextField fx:id="tfMaxTo" layoutX="10.0" layoutY="35.0" />
+                            <TextField fx:id="tfBuildingCodeTo" layoutX="10.0" layoutY="121.0" />
+                            <TextField fx:id="tfRoomCodeTo" layoutX="10.0" layoutY="162.0" />
+                        </VBox>
+                    </HBox>
+                    <VBox alignment="TOP_CENTER" prefWidth="321.0" spacing="15.0" VBox.vgrow="SOMETIMES">
+                        <HBox alignment="TOP_CENTER" spacing="12.0">
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                            <Button fx:id="btnUpdateTo" alignment="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#updateRecord" text="frissítés">
+                                <graphic>
+                                    <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                        <Image url="@../resources/update_left_rotation_24px.png" />
+                                    </ImageView>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                        <Button fx:id="btnTo" alignment="CENTER" mnemonicParsing="false" onAction="#updateRecord" text="mire" textAlignment="CENTER" />
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+                    </VBox>
+                </VBox>
+            </AnchorPane>
+        </SplitPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
             <TableView fx:id="tvLectures" onMouseClicked="#selectRecord" prefHeight="398.0" prefWidth="384.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <columns>

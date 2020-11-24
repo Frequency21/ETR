@@ -3,7 +3,6 @@ package main.dao;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import javafx.scene.control.Alert;
 import main.model.Lecture;
-import main.model.Teacher;
 
 import java.sql.*;
 import java.time.LocalTime;
@@ -67,10 +66,10 @@ public class LectureDAO extends DAO {
             throwables.printStackTrace();
         }
     }
-//  PRIMARY KEY (ev, felev, nap, kezdes, epulet_kod, terem_kod),
     @SuppressWarnings("DuplicatedCode")
     public void updateLecture(short year, byte semester, String day, LocalTime begin, LocalTime end, short max,
-                              String courseCode, String buildingCode, String roomCode) {
+                              String courseCode, String buildingCode, String roomCode, short yearPK, byte semesterPK,
+                              String dayPK, LocalTime beginPK, String buildingCodePK, String roomCodePK) {
         String sqlUpd = "UPDATE tanora SET ev = ?, felev = ?, nap = ?, kezdes = ?, vegzes = ?, max_letszam = ?, " +
             "kurzus_kod = ?, epulet_kod = ?, terem_kod = ? WHERE ev = ? and felev = ? and nap = ? and kezdes = ? and " +
             "epulet_kod = ? and terem_kod = ?";
@@ -85,13 +84,12 @@ public class LectureDAO extends DAO {
             stmt.setString(7, courseCode);
             stmt.setString(8, buildingCode);
             stmt.setString(9, roomCode);
-            stmt.setShort(10, year);
-            stmt.setByte(11, semester);
-            stmt.setString(12, day);
-            stmt.setTime(13, Time.valueOf(begin));
-            stmt.setString(14, buildingCode);
-            stmt.setString(15, roomCode);
-            stmt.executeUpdate();
+            stmt.setShort(10, yearPK);
+            stmt.setByte(11, semesterPK);
+            stmt.setString(12, dayPK);
+            stmt.setTime(13, Time.valueOf(beginPK));
+            stmt.setString(14, buildingCodePK);
+            stmt.setString(15, roomCodePK);
             int rowUpd = stmt.executeUpdate();
             Alert alert;
             if (rowUpd == 0) {
@@ -99,7 +97,7 @@ public class LectureDAO extends DAO {
                 alert.setHeaderText("A frissítés sikertelen volt, nincs ilyen tanóra.");
             } else {
                 alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("A frissítés sikeres volt.");
+                alert.setHeaderText("A frissítés sikeres volt.\n(" + rowUpd + "db tábla módosítva.");
             }
             alert.setTitle("Frissítés");
             alert.show();
@@ -107,6 +105,15 @@ public class LectureDAO extends DAO {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Sikertelen frissítés");
             alert.setHeaderText("Az egyik frissítendő adat túl hosszú.");
+            alert.show();
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("A frissítés sikertelen volt!");
+            if (ex.getMessage().contains("FOREIGN KEY (`epulet_kod`, `terem_kod`)")) {
+                alert.setHeaderText("Valószínűleg nem létező épület-, teremkód párost adtál meg.");
+            } else if (ex.getMessage().contains("FOREIGN KEY (`kurzus_kod`)")) {
+                alert.setHeaderText("Valószínűleg nem létező kurzuskódot adtál meg.");
+            }
             alert.show();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
