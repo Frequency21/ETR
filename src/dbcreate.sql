@@ -421,3 +421,9 @@ natural join tanora tan
 group by ev, felev, nap, kezdes
 order by ev, felev, nap, kezdes
 ;
+
+select * from
+tanora
+where terem_kod = '205' and epulet_kod = 'BOFI'
+  and felev = 1 and ev = 2016 and nap = 'hétfő'
+  and ((kezdes between '10:00' and '11:00') or vegzes between '10:00' and '12:00');
