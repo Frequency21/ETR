@@ -116,7 +116,7 @@ public class StudentsTabController implements Initializable {
         }
         studentDAO.updateStudent(tfEtrCode.getText(), tfFirstName.getText(), tfLastName.getText(), tfMajor.getText(),
             Short.parseShort(tfYear.getText()), tfEmail.getText());
-        clear();
+//        clear();
         showStudents();
     }
 

@@ -96,7 +96,7 @@ public class CoursesTabController implements Initializable {
         }
         courseDAO.updateCourse(tfCourseCode.getText(), Short.parseShort(tfCredit.getText()), cbPractice.isSelected(),
             tfName.getText(), tfEtrCode.getText());
-        clear();
+//        clear();
         showCourses();
     }
 

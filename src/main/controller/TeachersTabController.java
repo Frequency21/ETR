@@ -92,7 +92,7 @@ public class TeachersTabController implements Initializable {
         }
         teacherDAO.updateTeacher(tfEtrCode.getText(), tfFirstName.getText(), tfLastName.getText(),
             tfDepartment.getText(), tfEmail.getText());
-        clear();
+//        clear();
         showTeachers();
     }
 
