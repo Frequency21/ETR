@@ -93,6 +93,16 @@ public class LecturesTabController implements Initializable {
         spEndTo.setValueFactory(spvfEndTo);
         spvfBeginTo.setValue(LocalTime.of(8, 0));
         spvfEndTo.setValue(LocalTime.of(8, 0));
+        // initialize cols
+        colCourseCode.setCellValueFactory(new PropertyValueFactory<>("courseCode"));
+        colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
+        colSemester.setCellValueFactory(new PropertyValueFactory<>("semester"));
+        colDay.setCellValueFactory(new PropertyValueFactory<>("day"));
+        colBegin.setCellValueFactory(new PropertyValueFactory<>("begin"));
+        colEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
+        colMax.setCellValueFactory(new PropertyValueFactory<>("max"));
+        colBuildingCode.setCellValueFactory(new PropertyValueFactory<>("buildingCode"));
+        colRoomCode.setCellValueFactory(new PropertyValueFactory<>("roomCode"));
         showLectures();
 
         // splitpane
@@ -110,17 +120,8 @@ public class LecturesTabController implements Initializable {
 
     }
 
-    void showLectures() {
+    private void showLectures() {
         ObservableList<Lecture> lectures = FXCollections.observableArrayList(lectureDAO.getLectures());
-        colCourseCode.setCellValueFactory(new PropertyValueFactory<>("courseCode"));
-        colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
-        colSemester.setCellValueFactory(new PropertyValueFactory<>("semester"));
-        colDay.setCellValueFactory(new PropertyValueFactory<>("day"));
-        colBegin.setCellValueFactory(new PropertyValueFactory<>("begin"));
-        colEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
-        colMax.setCellValueFactory(new PropertyValueFactory<>("max"));
-        colBuildingCode.setCellValueFactory(new PropertyValueFactory<>("buildingCode"));
-        colRoomCode.setCellValueFactory(new PropertyValueFactory<>("roomCode"));
         tvLectures.setItems(lectures);
     }
 
@@ -209,6 +210,10 @@ public class LecturesTabController implements Initializable {
 
     public void selectRecord(MouseEvent mouseEvent) {
         Lecture lecture = tvLectures.getSelectionModel().getSelectedItem();
+        // enélkül null pointer exception keletkezik,
+        // ha valamelyik oszlop szerint rendezünk
+        if (lecture == null)
+            return;
         setFields(lecture, tfCourseCode, tfYear, rbSemester1, rbSemester2, cbDay, spvfBegin,
             spvfEnd, tfMax, tfBuildingCode, tfRoomCode);
         // same for other pane

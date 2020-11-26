@@ -36,16 +36,16 @@ public class TeachersTabController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        showTeachers();
-    }
-
-    void showTeachers() {
-        ObservableList<Teacher> teachers = FXCollections.observableArrayList(teacherDAO.getTeachers());
         colEtr.setCellValueFactory(new PropertyValueFactory<>("etrCode"));
         colFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         colLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         colDepartment.setCellValueFactory(new PropertyValueFactory<>("department"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        showTeachers();
+    }
+
+    void showTeachers() {
+        ObservableList<Teacher> teachers = FXCollections.observableArrayList(teacherDAO.getTeachers());
         tvTeachers.setItems(teachers);
     }
 

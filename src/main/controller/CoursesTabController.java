@@ -39,11 +39,6 @@ public class CoursesTabController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        showCourses();
-    }
-
-    void showCourses() {
-        ObservableList<Course> courses = FXCollections.observableArrayList(courseDAO.getCourses());
         colCourseCode.setCellValueFactory(new PropertyValueFactory<>("courseCode"));
         colCredit.setCellValueFactory(new PropertyValueFactory<>("credit"));
         colPractice.setCellValueFactory(new PropertyValueFactory<>("pracitce"));
@@ -56,6 +51,11 @@ public class CoursesTabController implements Initializable {
         });
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colEtrCode.setCellValueFactory(new PropertyValueFactory<>("etrCode"));
+        showCourses();
+    }
+
+    void showCourses() {
+        ObservableList<Course> courses = FXCollections.observableArrayList(courseDAO.getCourses());
         tvCourses.setItems(courses);
     }
 

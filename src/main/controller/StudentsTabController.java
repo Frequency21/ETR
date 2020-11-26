@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -11,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import main.dao.StudentDAO;
 import main.model.Student;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ResourceBundle;
@@ -38,27 +40,19 @@ public class StudentsTabController implements Initializable {
 
     public StudentsTabController() {}
 
-    @FXML
-    public void handleButtonEvent(ActionEvent event) {
-        if (tfFirstName.getText() != null && tfFirstName.getText().equals("easter egg")) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "You found the easter egg.");
-            alert.show();
-        }
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        showStudents();
-    }
-
-    void showStudents() {
-        ObservableList<Student> students = FXCollections.observableArrayList(studentDAO.getStudents());
         colEtr.setCellValueFactory(new PropertyValueFactory<>("etrCode"));
         colFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         colLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         colMajor.setCellValueFactory(new PropertyValueFactory<>("major"));
         colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        showStudents();
+    }
+
+    void showStudents() {
+        ObservableList<Student> students = FXCollections.observableArrayList(studentDAO.getStudents());
         tvStudents.setItems(students);
     }
 
