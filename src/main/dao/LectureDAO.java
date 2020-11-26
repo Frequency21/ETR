@@ -17,8 +17,8 @@ public class LectureDAO extends DAO {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    public void addLecture(short year, byte semester, String day, LocalTime begin, LocalTime end, short max, String courseCode,
-                           String buildingCode, String roomCode)
+    public void addLecture(short year, byte semester, String day, LocalTime begin, LocalTime end, short max,
+                           String courseCode, String buildingCode, String roomCode)
         throws SQLIntegrityConstraintViolationException {
         String sql = "INSERT INTO tanora VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -40,7 +40,8 @@ public class LectureDAO extends DAO {
         }
     }
 
-    public void deleteLecture(short year, byte semester, String day, LocalTime begin, String buildingCode, String roomCode) {
+    public void deleteLecture(short year, byte semester, String day, LocalTime begin, String buildingCode,
+                              String roomCode) {
         String sql = "DELETE FROM tanora WHERE ev = ? and felev = ? and nap = ? and kezdes = ? and epulet_kod = ? " +
             "and terem_kod = ?";
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -97,7 +98,7 @@ public class LectureDAO extends DAO {
                 alert.setHeaderText("A frissítés sikertelen volt, nincs ilyen tanóra.");
             } else {
                 alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("A frissítés sikeres volt.\n(" + rowUpd + "db tábla módosítva.");
+                alert.setHeaderText("A frissítés sikeres volt.");
             }
             alert.setTitle("Frissítés");
             alert.show();
@@ -109,10 +110,12 @@ public class LectureDAO extends DAO {
         } catch (SQLIntegrityConstraintViolationException ex) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("A frissítés sikertelen volt!");
-            if (ex.getMessage().contains("FOREIGN KEY (`epulet_kod`, `terem_kod`)")) {
+            if (ex.getMessage().contains("fk_tanora_terem")) {
                 alert.setHeaderText("Valószínűleg nem létező épület-, teremkód párost adtál meg.");
-            } else if (ex.getMessage().contains("FOREIGN KEY (`kurzus_kod`)")) {
+            } else if (ex.getMessage().contains("fk_tanora_kurzus")) {
                 alert.setHeaderText("Valószínűleg nem létező kurzuskódot adtál meg.");
+            } else if (ex.getMessage().contains("begin_lt_end")) {
+                alert.setHeaderText("A kezdés időpontja nem haladhatja meg a végzését!");
             }
             alert.show();
         } catch (SQLException throwables) {

@@ -2,18 +2,17 @@
 
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.AnchorPane?>
 
 <TabPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="main.controller.MainController">
     <Tab fx:id="studentsTab" closable="false" text="Hallgatók">
-        <fx:include source="StudentsTab.fxml"/>
+        <fx:include source="StudentsTab.fxml" />
     </Tab>
     <Tab fx:id="teachersTab" closable="false" text="Oktatók">
-        <fx:include source="TeachersTab.fxml"/>
+        <fx:include source="TeachersTab.fxml" />
     </Tab>
     <Tab fx:id="coursesTab" closable="false" text="Kurzusok">
-        <fx:include source="CoursesTab.fxml"/>
+        <fx:include source="CoursesTab.fxml" />
     </Tab>
     <Tab fx:id="lecturesTab" closable="false" text="Tanórák">
         <fx:include source="LecturesTab.fxml"/>
