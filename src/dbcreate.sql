@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `oktato`
     etr_kod CHAR(11)     NOT NULL,
     tanszek VARCHAR(100) NOT NULL,
     PRIMARY KEY (etr_kod),
-    FOREIGN KEY (etr_kod) REFERENCES `felhasznalo` (etr_kod)
+    CONSTRAINT fk_oktato_felhasznalo FOREIGN KEY (etr_kod) REFERENCES `felhasznalo` (etr_kod)
         ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `hallgato`
     szak     VARCHAR(100) NOT NULL,
     evfolyam SMALLINT     NOT NULL,
     PRIMARY KEY (etr_kod),
-    FOREIGN KEY (etr_kod) REFERENCES `felhasznalo` (etr_kod)
+    CONSTRAINT fk_hallgato_felhasznalo FOREIGN KEY (etr_kod) REFERENCES `felhasznalo` (etr_kod)
         ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `kurzus`
     nev          NVARCHAR(100) NOT NULL,
     etr_kod      CHAR(11)               DEFAULT NULL,
     PRIMARY KEY (kurzus_kod),
-    FOREIGN KEY (etr_kod) REFERENCES `oktato` (etr_kod)
+    CONSTRAINT fk_kurzus_oktato FOREIGN KEY (etr_kod) REFERENCES `oktato` (etr_kod)
         ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
@@ -64,21 +64,13 @@ CREATE TABLE IF NOT EXISTS `elofeltetele`
     kurzus_kod      VARCHAR(10) NOT NULL,
     kurzus_kod_felt VARCHAR(10) NOT NULL,
     PRIMARY KEY (kurzus_kod, kurzus_kod_felt),
-    FOREIGN KEY (kurzus_kod) REFERENCES kurzus (kurzus_kod)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (kurzus_kod_felt) REFERENCES kurzus (kurzus_kod)
-        ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT fk_elofeltetele_kurzus FOREIGN KEY (kurzus_kod) REFERENCES kurzus (kurzus_kod)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_elofelt_elofelt FOREIGN KEY (kurzus_kod_felt) REFERENCES kurzus (kurzus_kod)
+        ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_hungarian_ci;
-
-ALTER TABLE elofeltetele DROP CONSTRAINT elofeltetele_ibfk_1;
-ALTER TABLE elofeltetele DROP CONSTRAINT elofeltetele_ibfk_2;
-
-ALTER TABLE elofeltetele ADD CONSTRAINT FOREIGN KEY (kurzus_kod) REFERENCES kurzus (kurzus_kod)
-    ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE elofeltetele ADD CONSTRAINT FOREIGN KEY (kurzus_kod_felt) REFERENCES kurzus (kurzus_kod)
-    ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `terem`
 (
@@ -102,17 +94,16 @@ CREATE TABLE IF NOT EXISTS `tanora`
     kurzus_kod  VARCHAR(10) NOT NULL,
     epulet_kod  VARCHAR(10) NOT NULL,
     terem_kod   VARCHAR(10) NOT NULL,
-    CHECK ( kezdes < vegzes ),
+    CONSTRAINT begin_lt_end CHECK ( kezdes < vegzes ),
     PRIMARY KEY (ev, felev, nap, kezdes, epulet_kod, terem_kod),
     UNIQUE (ev, felev, nap, vegzes, epulet_kod, terem_kod),
-    FOREIGN KEY (kurzus_kod) REFERENCES kurzus (kurzus_kod)
+    CONSTRAINT fk_tanora_kurzus FOREIGN KEY (kurzus_kod) REFERENCES kurzus (kurzus_kod)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (epulet_kod, terem_kod) REFERENCES terem (epulet_kod, terem_kod)
+    CONSTRAINT fk_tanora_terem FOREIGN KEY (epulet_kod, terem_kod) REFERENCES terem (epulet_kod, terem_kod)
         ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_hungarian_ci;
-
 
 CREATE TABLE IF NOT EXISTS `tart`
 (
@@ -124,9 +115,9 @@ CREATE TABLE IF NOT EXISTS `tart`
     epulet_kod VARCHAR(10) NOT NULL,
     terem_kod  VARCHAR(10) NOT NULL,
     PRIMARY KEY (etr_kod, ev, felev, nap, kezdes, epulet_kod, terem_kod),
-    FOREIGN KEY (etr_kod) REFERENCES oktato (etr_kod)
+    CONSTRAINT fk_tart_oktato FOREIGN KEY (etr_kod) REFERENCES oktato (etr_kod)
         ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (ev, felev, nap, kezdes, epulet_kod, terem_kod)
+    CONSTRAINT fk_tart_tanora FOREIGN KEY (ev, felev, nap, kezdes, epulet_kod, terem_kod)
         REFERENCES tanora (ev, felev, nap, kezdes, epulet_kod, terem_kod)
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE = InnoDB
@@ -145,8 +136,8 @@ CREATE TABLE IF NOT EXISTS `felvett`
     epulet_kod VARCHAR(10) NOT NULL,
     terem_kod  VARCHAR(10) NOT NULL,
     PRIMARY KEY (etr_kod, ev, felev, nap, kezdes, epulet_kod, terem_kod),
-    FOREIGN KEY (etr_kod) REFERENCES hallgato (etr_kod),
-    FOREIGN KEY (ev, felev, nap, kezdes, epulet_kod, terem_kod)
+    CONSTRAINT fk_felvett_hallgato FOREIGN KEY (etr_kod) REFERENCES hallgato (etr_kod),
+    CONSTRAINT fk_felvett_tanora FOREIGN KEY (ev, felev, nap, kezdes, epulet_kod, terem_kod)
         REFERENCES tanora (ev, felev, nap, kezdes, epulet_kod, terem_kod)
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE = InnoDB
@@ -335,6 +326,7 @@ values
        (4, 'ARFYAAT.SZE', 2017, 1, 'csütörtök', '10:00', 'BOFI', '205'),
        (4, 'ARFYAAT.SZE', 2018, 1, 'szerda', '18:00', 'BOFI', '206'), /* statfiz */
        (5, 'ARFYAAT.SZE', 2018, 1, 'kedd', '12:00', 'BOFI', '204'),
+#        Patrik
        (3, 'TOPYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'DOMFI', '101'), /* mecha */
        (2, 'TOPYAAT.SZE', 2016, 1, 'szerda', '12:00', 'BOFI', '203'),
        (4, 'TOPYAAT.SZE', 2016, 2, 'kedd', '10:00', 'DOMFI', '101'), /* hullámtan */
@@ -427,3 +419,20 @@ tanora
 where terem_kod = '205' and epulet_kod = 'BOFI'
   and felev = 1 and ev = 2016 and nap = 'hétfő'
   and ((kezdes between '10:00' and '11:00') or vegzes between '10:00' and '12:00');
+
+insert into felvett
+values #        Kristóf
+       (5, 'NAKYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'DOMFI', '101'), /* mecha */
+       (5, 'NAKYAAT.SZE', 2016, 1, 'szerda', '12:00', 'BOFI', '203'),
+       (5, 'NAKYAAT.SZE', 2016, 2, 'kedd', '10:00', 'DOMFI', '101'), /* hullámtan */
+       (5, 'NAKYAAT.SZE', 2016, 2, 'csütörtök', '14:00', 'BOFI', '204'),
+       (5, 'NAKYAAT.SZE', 2017, 1, 'péntek', '10:00', 'DOMFI', '101'), /* elektro */
+       (5, 'NAKYAAT.SZE', 2017, 1, 'kedd', '14:00', 'BOFI', '204');
+
+# Listázzuk a nem teljesített előfeltételeket (adott hallgató és kurzus)
+SELECT kurzus_kod_felt
+FROM elofeltetele
+where kurzus_kod = 'FBN414E' and elofeltetele.kurzus_kod_felt NOT IN
+                         (SELECT tanora.kurzus_kod
+                          FROM felvett natural join tanora
+                          WHERE etr_kod = 'NAKYAAT.SZE');
