@@ -44,7 +44,6 @@ public class AddAttendanceTabController implements Initializable {
     public Button btnDeleteRecord;
     public Button btnUpdateRecord;
 
-    private MainController mainController;
     private final LectureDAO lectureDAO = new LectureDAO();
     private final StudentDAO studentDAO = new StudentDAO();
     private final AttendanceDAO attendanceDAO = new AttendanceDAO();
@@ -72,10 +71,6 @@ public class AddAttendanceTabController implements Initializable {
         colLectureRoomCode.setCellValueFactory(new PropertyValueFactory<>("roomCode"));
         showLectures();
         showStudents();
-    }
-
-    public void injectMainController(MainController mainController) {
-        this.mainController = mainController;
     }
 
     public void addLectureToStudent(ActionEvent mouseEvent) {

@@ -144,6 +144,9 @@ CREATE TABLE IF NOT EXISTS `felvett`
   DEFAULT CHARSET = utf8
   COLLATE = utf8_hungarian_ci;
 
+alter table felvett drop foreign key fk_felvett_hallgato;
+alter table felvett add constraint fk_felvett_hallgato foreign key (etr_kod) REFERENCES hallgato (etr_kod) on delete cascade on update cascade;
+
 INSERT INTO felhasznalo
 VALUES
 #        fizikusok
@@ -454,3 +457,21 @@ where kurzus_kod = 'FBN414E' and elofeltetele.kurzus_kod_felt NOT IN
                          (SELECT tanora.kurzus_kod
                           FROM felvett natural join tanora
                           WHERE etr_kod = 'NAKYAAT.SZE');
+
+select * from elofeltetele natural join kurzus
+where kurzus_kod = 'FBN414E';
+
+select * from elofeltetele natural join kurzus where kurzus_kod = 'FBN414E';
+
+select kurzus_kod_felt, nev, kredit_ertek
+from elofeltetele inner join kurzus k
+on k.kurzus_kod = elofeltetele.kurzus_kod_felt
+where elofeltetele.kurzus_kod = 'FBN414E';
+
+select * from kurzus as k
+where k.kurzus_kod in (select kurzus_kod_felt from elofeltetele as e where e.kurzus_kod = 'FBN414E');
+
+select kurzus_kod_felt, kredit_ertek, gyakorlat, nev, etr_kod
+from elofeltetele inner join kurzus
+on elofeltetele.kurzus_kod = kurzus.kurzus_kod
+where elofeltetele.kurzus_kod = 'FBN414E';

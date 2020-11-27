@@ -16,10 +16,13 @@
     <Tab fx:id="lectures" closable="false" text="Tanórák">
         <fx:include fx:id="lecturesTab" source="LecturesTab.fxml" />
     </Tab>
-    <Tab fx:id="attendance" closable="false" text="Teljesítések">
-        <fx:include fx:id="attendanceTab" source="AttendanceTab.fxml" />
-    </Tab>
-    <Tab fx:id="addAttendance" closable="false" text="Teljesítések felvétele">
+    <Tab fx:id="addAttendances" closable="false" text="Teljesítések felvétele">
         <fx:include fx:id="addAttendanceTab" source="AddAttendanceTab.fxml" />
+    </Tab>
+    <Tab fx:id="subjects" closable="false" text="Teljesítések">
+        <fx:include fx:id="subjectTab" source="SubjectTab.fxml" />
+    </Tab>
+    <Tab fx:id="requirements" closable="false" text="Előfeltételek">
+        <fx:include fx:id="requirementsTab" source="RequirementsTab.fxml" />
     </Tab>
 </TabPane>

@@ -109,4 +109,20 @@ public class CourseDAO extends DAO {
         return course;
     }
 
+    public List<Course> getDependenciesForCourse(String courseCode) {
+        String sql = "select * from kurzus as k where k.kurzus_kod in " +
+            "(select kurzus_kod_felt from elofeltetele as e where e.kurzus_kod = ?)";
+        List<Course> dependencies = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, courseCode);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                dependencies.add(createCourse(rs));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return dependencies;
+    }
 }
