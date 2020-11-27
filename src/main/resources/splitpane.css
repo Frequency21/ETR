@@ -1,0 +1,18 @@
+.split-pane-divider {
+    -fx-padding: 0 1 0 1 ;
+    -fx-background-color: black ;
+    -fx-background-insets: 0;
+}
+
+#leftPane > .split-pane-divider {
+    -fx-cursor: normal;
+}
+
+.table-view {
+    -fx-focus-color: transparent;
+}
+
+.button {
+    -fx-border-color: black;
+    -fx-border-radius: 4px;
+}

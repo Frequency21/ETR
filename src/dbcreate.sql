@@ -351,13 +351,31 @@ hallgato -> felvett -> tanora -> kurzus
                 select on kurzus_kod
 */
 
-select f.etr_kod, f2.vnev, f2.knev, avg(erdemjegy) as atlag, sum(kredit_ertek) as `ossz kredit` from felvett as f
+select f.etr_kod, f2.vnev, f2.knev, avg(erdemjegy) as atlag, sum(kredit_ertek * erdemjegy) / sum(kredit_ertek) as KKI,
+       sum(kredit_ertek) as `ossz kredit` from felvett as f
 inner join tanora t on
 f.ev = t.ev and f.felev = t.felev and t.nap = f.nap and t.kezdes = f.kezdes and
 f.epulet_kod = t.epulet_kod and f.terem_kod = t.terem_kod
 inner join kurzus k on t.kurzus_kod = k.kurzus_kod
 left join felhasznalo f2 on f.etr_kod = f2.etr_kod
 group by f.etr_kod;
+
+select f.etr_kod,
+       f2.vnev,
+       f2.knev,
+       avg(erdemjegy)                                    as atlag,
+       sum(kredit_ertek * erdemjegy) / sum(kredit_ertek) as KKI,
+       sum(kredit_ertek)                                 as `ossz kredit`
+from felvett as f
+         natural join tanora t
+         inner join kurzus k on t.kurzus_kod = k.kurzus_kod
+         left join felhasznalo f2 on f.etr_kod = f2.etr_kod
+where erdemjegy != 1
+group by f.etr_kod;
+
+select etr_kod, vnev, knev, avg(erdemjegy) as `hagy. atlag`, sum(kredit_ertek) as `ossz kredit`
+from felvett natural join tanora natural join kurzus natural join felhasznalo
+group by etr_kod;
 
 select */*hallgato.etr_kod, vnev, knev, tanora.kurzus_kod*/
 from felhasznalo

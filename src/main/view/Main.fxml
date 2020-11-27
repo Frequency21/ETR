@@ -3,18 +3,23 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 
-<TabPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="main.controller.MainController">
-    <Tab fx:id="studentsTab" closable="false" text="Hallgatók">
-        <fx:include source="StudentsTab.fxml" />
+<TabPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.MainController">
+    <Tab fx:id="students" closable="false" text="Hallgatók">
+        <fx:include fx:id="studentsTab" source="StudentsTab.fxml" />
     </Tab>
-    <Tab fx:id="teachersTab" closable="false" text="Oktatók">
-        <fx:include source="TeachersTab.fxml" />
+    <Tab fx:id="teachers" closable="false" text="Oktatók">
+        <fx:include fx:id="teachersTab" source="TeachersTab.fxml" />
     </Tab>
-    <Tab fx:id="coursesTab" closable="false" text="Kurzusok">
-        <fx:include source="CoursesTab.fxml" />
+    <Tab fx:id="courses" closable="false" text="Kurzusok">
+        <fx:include fx:id="coursesTab" source="CoursesTab.fxml" />
     </Tab>
-    <Tab fx:id="lecturesTab" closable="false" text="Tanórák">
-        <fx:include source="LecturesTab.fxml"/>
+    <Tab fx:id="lectures" closable="false" text="Tanórák">
+        <fx:include fx:id="lecturesTab" source="LecturesTab.fxml" />
+    </Tab>
+    <Tab fx:id="attendance" closable="false" text="Teljesítések">
+        <fx:include fx:id="attendanceTab" source="AttendanceTab.fxml" />
+    </Tab>
+    <Tab fx:id="addAttendance" closable="false" text="Teljesítések felvétele">
+        <fx:include fx:id="addAttendanceTab" source="AddAttendanceTab.fxml" />
     </Tab>
 </TabPane>

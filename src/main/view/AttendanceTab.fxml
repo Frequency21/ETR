@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="580.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.AttendanceTabController">
+    <SplitPane dividerPositions="0.3" layoutX="26.0" layoutY="193.0" prefHeight="580.0" prefWidth="1000.0" stylesheets="@../resources/splitpane.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <AnchorPane>
+              <TableView fx:id="tvStudents" prefHeight="578.0" prefWidth="496.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <columns>
+                      <TableColumn fx:id="colStudentEtrCode" minWidth="20.0" prefWidth="114.0" text="etr kód" />
+                      <TableColumn fx:id="colStudentFirstName" minWidth="20.0" prefWidth="50.0" text="vnév" />
+                      <TableColumn fx:id="colStudentLastName" minWidth="20.0" prefWidth="39.0" text="knév" />
+                      <TableColumn fx:id="colStudentYear" minWidth="26.0" prefWidth="67.0" text="évfolyam" />
+                      <TableColumn fx:id="colStudentMajor" minWidth="50.0" prefWidth="50.0" text="szak" />
+                  </columns>
+                  <columnResizePolicy>
+                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                  </columnResizePolicy>
+                  <stylesheets>
+                      <URL value="@../resources/tableviewcommon.css" />
+                      <URL value="@../resources/tableviewstudentcolors.css" />
+                  </stylesheets>
+              </TableView>
+          </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+            <TableView fx:id="tvLectures" prefHeight="578.0" prefWidth="496.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <columns>
+                    <TableColumn fx:id="colLectureCourseCode" prefWidth="30.0" text="kurzus kód" />
+                    <TableColumn fx:id="colLectureYear" maxWidth="100.0" minWidth="50.0" prefWidth="50.0" text="év" />
+                    <TableColumn fx:id="colLectureSemester" maxWidth="60.0" minWidth="40.0" prefWidth="40.0" text="félév" />
+                    <TableColumn fx:id="colLectureDay" minWidth="15.0" prefWidth="114.0" text="nap" />
+                    <TableColumn fx:id="colLectureBegin" maxWidth="1000.0" minWidth="50.0" prefWidth="50.0" text="kezdés" />
+                    <TableColumn fx:id="colLectureEnd" maxWidth="1000.0" minWidth="50.0" prefWidth="50.0" text="végzés" />
+                    <TableColumn fx:id="colLectureMax" prefWidth="140.0" text="max létszám" />
+                    <TableColumn fx:id="colLectureBuildingCode" minWidth="20.0" prefWidth="10.0" text="épület kód" />
+                    <TableColumn fx:id="colLectureRoomCode" minWidth="20.0" prefWidth="140.0" text="terem kód" />
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+                <stylesheets>
+                    <URL value="@../resources/tableviewcommon.css" />
+                    <URL value="@../resources/tableviewstudentcolors.css" />
+                </stylesheets>
+            </TableView>
+        </AnchorPane>
+    </SplitPane>
+</AnchorPane>

@@ -75,4 +75,16 @@ public class Student {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+            "etrCode='" + etrCode + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", major='" + major + '\'' +
+            ", year=" + year +
+            ", email='" + email + '\'' +
+            '}';
+    }
 }

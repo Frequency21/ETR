@@ -40,6 +40,7 @@ public class StudentsTabController implements Initializable {
 
     public StudentsTabController() {}
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colEtr.setCellValueFactory(new PropertyValueFactory<>("etrCode"));

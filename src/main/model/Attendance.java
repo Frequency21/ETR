@@ -2,27 +2,55 @@ package main.model;
 
 import java.time.LocalTime;
 
-public class Lecture {
+public class Attendance {
+    private byte grade;
+    private String etrCode;
     private short year;
     private byte semester;
     private String day;
-    private LocalTime begin, end;
-    private short max;
-    private String courseCode;
+    private LocalTime begin;
     private String buildingCode;
     private String roomCode;
 
-    public Lecture(short year, byte semester, String day, LocalTime begin, LocalTime end, short max,
-                   String courseCode, String buildingCode, String roomCode) {
+    public Attendance() {}
+
+    public Attendance(String etrCode, short year, byte semester, String day, LocalTime begin, String buildingCode,
+                      String roomCode) {
+        this.etrCode = etrCode;
         this.year = year;
         this.semester = semester;
         this.day = day;
         this.begin = begin;
-        this.end = end;
-        this.max = max;
-        this.courseCode = courseCode;
         this.buildingCode = buildingCode;
         this.roomCode = roomCode;
+    }
+
+    public Attendance(byte grade, String etrCode, short year, byte semester, String day, LocalTime begin,
+                      String buildingCode, String roomCode) {
+        this.grade = grade;
+        this.etrCode = etrCode;
+        this.year = year;
+        this.semester = semester;
+        this.day = day;
+        this.begin = begin;
+        this.buildingCode = buildingCode;
+        this.roomCode = roomCode;
+    }
+
+    public byte getGrade() {
+        return grade;
+    }
+
+    public void setGrade(byte grade) {
+        this.grade = grade;
+    }
+
+    public String getEtrCode() {
+        return etrCode;
+    }
+
+    public void setEtrCode(String etrCode) {
+        this.etrCode = etrCode;
     }
 
     public short getYear() {
@@ -57,30 +85,6 @@ public class Lecture {
         this.begin = begin;
     }
 
-    public LocalTime getEnd() {
-        return end;
-    }
-
-    public void setEnd(LocalTime end) {
-        this.end = end;
-    }
-
-    public short getMax() {
-        return max;
-    }
-
-    public void setMax(short max) {
-        this.max = max;
-    }
-
-    public String getCourseCode() {
-        return courseCode;
-    }
-
-    public void setCourseCode(String courseCode) {
-        this.courseCode = courseCode;
-    }
-
     public String getBuildingCode() {
         return buildingCode;
     }
@@ -95,20 +99,5 @@ public class Lecture {
 
     public void setRoomCode(String roomCode) {
         this.roomCode = roomCode;
-    }
-
-    @Override
-    public String toString() {
-        return "Lecture{" +
-            "year=" + year +
-            ", semester=" + semester +
-            ", day='" + day + '\'' +
-            ", begin=" + begin +
-            ", end=" + end +
-            ", max=" + max +
-            ", courseCode='" + courseCode + '\'' +
-            ", buildingCode='" + buildingCode + '\'' +
-            ", roomCode='" + roomCode + '\'' +
-            '}';
     }
 }
