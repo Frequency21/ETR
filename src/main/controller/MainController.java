@@ -13,6 +13,7 @@ public class MainController {
     public SubjectTabController subjectTabController;
     public GradePointAverageController gradePointAveragesTabController;
     public TeachesTabController teachesTabController;
+    public LectureRoomStatisticController lectureRoomStatisticTabController;
     public Tab students;
     public Tab teachers;
     public Tab courses;
@@ -21,6 +22,7 @@ public class MainController {
     public Tab subjects;
     public Tab gradePointAverages;
     public Tab teaches;
+    public Tab statistics;
 
     @FXML
     private void initialize() {
@@ -37,6 +39,9 @@ public class MainController {
         });
         teaches.setOnSelectionChanged(event -> {
             teachesTabController.showTeaches();
+        });
+        statistics.setOnSelectionChanged(event -> {
+            lectureRoomStatisticTabController.showStatistics();
         });
     }
 

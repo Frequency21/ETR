@@ -360,6 +360,15 @@ values
        (5, 'NAKYAAT.SZE', 2017, 1, 'kedd', '14:00', 'BOFI', '204');
        ;
 
+# Melyik teremben hány órát tartanak egy adott évben, félévben?
+
+select te.epulet_kod, te.terem_kod, kabinet, te.max_letszam, ev, felev, COUNT(kurzus_kod) as mennyi
+from terem as te left join tanora ta
+on te.epulet_kod = ta.epulet_kod and te.terem_kod = ta.terem_kod
+group by ta.epulet_kod, ta.terem_kod
+;
+
+
 # Néhány lekérdezés tesztelésképpen
 #
 # select f.etr_kod, f2.vnev, f2.knev, avg(erdemjegy) as atlag, sum(kredit_ertek * erdemjegy) / sum(kredit_ertek) as KKI,

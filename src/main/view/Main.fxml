@@ -34,4 +34,7 @@
     <Tab fx:id="lectureRooms" closable="false" text="Termek">
         <fx:include fx:id="lectureRoomTab" source="LectureRoomTab.fxml" />
     </Tab>
+    <Tab fx:id="statistics" closable="false" text="Terem statisztikák">
+        <fx:include fx:id="lectureRoomStatisticTab" source="LectureRoomStatisticTab.fxml" />
+    </Tab>
 </TabPane>
