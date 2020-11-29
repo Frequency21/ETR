@@ -15,8 +15,7 @@ public class CourseDAO extends DAO {
         return getCourses(sql);
     }
 
-    public void addCourse(String courseCode, short credit, boolean practice, String name, String etrCode)
-        throws SQLIntegrityConstraintViolationException {
+    public void addCourse(String courseCode, short credit, boolean practice, String name, String etrCode) {
         String sql = "INSERT INTO kurzus VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmtUser = connection.prepareStatement(sql)) {
@@ -26,8 +25,20 @@ public class CourseDAO extends DAO {
             stmtUser.setString(4, name);
             stmtUser.setString(5, etrCode);
             stmtUser.executeUpdate();
+        } catch (MysqlDataTruncation ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sikertelen hozzáadás");
+            alert.setHeaderText("Az egyik frissítendő adat túl hosszú.");
+            alert.show();
         } catch (SQLIntegrityConstraintViolationException ex) {
-            throw ex;
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("A frissítés sikertelen volt!");
+            if (ex.getMessage().contains("fk_kurzus_oktato")) {
+                alert.setHeaderText("Kurzusfelelősnek csak oktató etr kódját lehet megadni!");
+            } else if (ex.getMessage().contains("PRIMARY")) {
+                alert.setHeaderText("A kurzuskódhoz tartozó kurzus már regisztrálva van!");
+            }
+            alert.show();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -54,6 +65,11 @@ public class CourseDAO extends DAO {
             alert.setTitle("Sikertelen törlés!");
             alert.setHeaderText("A kurzus törlése nem lehetséges. (Valószínűleg van belőle kurzus tartva.)");
             alert.show();
+        } catch (MysqlDataTruncation ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sikertelen hozzáadás");
+            alert.setHeaderText("Az egyik frissítendő adat túl hosszú.");
+            alert.show();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -70,6 +86,13 @@ public class CourseDAO extends DAO {
             stmt.setString(4, etrCode);
             stmt.setString(5, courseCode);
             stmt.executeUpdate();
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("A frissítés sikertelen volt!");
+            if (ex.getMessage().contains("fk_kurzus_oktato")) {
+                alert.setHeaderText("Kurzusfelelősnek csak oktató etr kódját lehet megadni!");
+            }
+            alert.show();
         } catch (MysqlDataTruncation ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Sikertelen frissítés");

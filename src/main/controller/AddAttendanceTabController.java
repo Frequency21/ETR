@@ -76,8 +76,13 @@ public class AddAttendanceTabController implements Initializable {
     public void addLectureToStudent(ActionEvent mouseEvent) {
         Student student = tvStudents.getSelectionModel().getSelectedItem();
         Lecture lecture = tvLectures.getSelectionModel().getSelectedItem();
-        if (student == null || lecture == null)
+        if (student == null || lecture == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sikertelen teljesítés felvétel!");
+            alert.setHeaderText("Nincs hallgató vagy tanóra kiválasztva");
+            alert.show();
             return;
+        }
         try {
             if (cbIsDone.isSelected()) {
                 attendanceDAO.addAttendanceWithGrade(Byte.parseByte(spGrade.getValue().toString()), student.getEtrCode(), lecture.getYear(),
@@ -98,14 +103,19 @@ public class AddAttendanceTabController implements Initializable {
         showLectures();
     }
 
+    @SuppressWarnings("DuplicatedCode")
     public void removeLectureForStudent(ActionEvent mouseEvent) {
         Student student = tvStudents.getSelectionModel().getSelectedItem();
         Lecture lecture = tvLectures.getSelectionModel().getSelectedItem();
-        if (student == null || lecture == null)
+        if (student == null || lecture == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sikertelen teljesítés felvétel!");
+            alert.setHeaderText("Nincs hallgató vagy tanóra kiválasztva");
+            alert.show();
             return;
+        }
         attendanceDAO.deleteAttendance(student.getEtrCode(), lecture.getYear(),
-            lecture.getSemester(), lecture.getDay(), lecture.getBegin(), lecture.getBuildingCode(),
-            lecture.getRoomCode());
+            lecture.getSemester(), lecture.getDay(), lecture.getBegin());
         showStudents();
         showLectures();
     }
@@ -115,18 +125,21 @@ public class AddAttendanceTabController implements Initializable {
         Lecture lecture = tvLectures.getSelectionModel().getSelectedItem();
         showStudents();
         showLectures();
-        if (student == null || lecture == null)
+        if (student == null || lecture == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sikertelen teljesítés felvétel!");
+            alert.setHeaderText("Nincs hallgató vagy tanóra kiválasztva");
+            alert.show();
             return;
+        }
         if (cbIsDone.isSelected()) {
-            attendanceDAO.updateAttendanceWithGrade(Byte.parseByte(spGrade.getValue().toString()), student.getEtrCode(), lecture.getYear(),
-                lecture.getSemester(), lecture.getDay(), lecture.getBegin(), lecture.getBuildingCode(),
-                lecture.getRoomCode());
+            attendanceDAO.updateAttendanceWithGrade(Byte.parseByte(spGrade.getValue().toString()), student.getEtrCode(),
+                lecture.getYear(), lecture.getSemester(), lecture.getDay(), lecture.getBegin());
             return;
         }
         attendanceDAO.updateAttendance(student.getEtrCode(), lecture.getYear(), lecture.getSemester(),
-            lecture.getDay(), lecture.getBegin(), lecture.getBuildingCode(), lecture.getRoomCode());
+            lecture.getDay(), lecture.getBegin());
     }
-
 
 
     @SuppressWarnings("DuplicatedCode")

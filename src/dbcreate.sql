@@ -105,6 +105,10 @@ CREATE TABLE IF NOT EXISTS `tanora`
   DEFAULT CHARSET = utf8
   COLLATE = utf8_hungarian_ci;
 
+alter table tanora drop constraint fk_tanora_terem;
+alter table tanora add constraint fk_tanora_terem foreign key (epulet_kod, terem_kod) REFERENCES terem (epulet_kod, terem_kod)
+ON DELETE RESTRICT ON UPDATE CASCADE;
+
 CREATE TABLE IF NOT EXISTS `tart`
 (
     etr_kod    CHAR(11)    NOT NULL,
@@ -114,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `tart`
     kezdes     TIME        NOT NULL,
     epulet_kod VARCHAR(10) NOT NULL,
     terem_kod  VARCHAR(10) NOT NULL,
-    PRIMARY KEY (etr_kod, ev, felev, nap, kezdes, epulet_kod, terem_kod),
+    PRIMARY KEY (etr_kod, ev, felev, nap, kezdes/*, epulet_kod, terem_kod*/),
     CONSTRAINT fk_tart_oktato FOREIGN KEY (etr_kod) REFERENCES oktato (etr_kod)
         ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT fk_tart_tanora FOREIGN KEY (ev, felev, nap, kezdes, epulet_kod, terem_kod)
@@ -135,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `felvett`
     kezdes     TIME        NOT NULL,
     epulet_kod VARCHAR(10) NOT NULL,
     terem_kod  VARCHAR(10) NOT NULL,
-    PRIMARY KEY (etr_kod, ev, felev, nap, kezdes, epulet_kod, terem_kod),
+    PRIMARY KEY (etr_kod, ev, felev, nap, kezdes/*, epulet_kod, terem_kod*/),
     CONSTRAINT fk_felvett_hallgato FOREIGN KEY (etr_kod) REFERENCES hallgato (etr_kod),
     CONSTRAINT fk_felvett_tanora FOREIGN KEY (ev, felev, nap, kezdes, epulet_kod, terem_kod)
         REFERENCES tanora (ev, felev, nap, kezdes, epulet_kod, terem_kod)
@@ -145,7 +149,8 @@ CREATE TABLE IF NOT EXISTS `felvett`
   COLLATE = utf8_hungarian_ci;
 
 alter table felvett drop foreign key fk_felvett_hallgato;
-alter table felvett add constraint fk_felvett_hallgato foreign key (etr_kod) REFERENCES hallgato (etr_kod) on delete cascade on update cascade;
+alter table felvett add constraint fk_felvett_hallgato foreign key (etr_kod) REFERENCES hallgato (etr_kod)
+on delete cascade on update cascade;
 
 INSERT INTO felhasznalo
 VALUES
@@ -271,7 +276,7 @@ values
        (2017, 1, 'kedd', '12:00', '14:00', 50, 'FBN311G', 'BOFI', '206'),
        (2017, 2, 'szerda', '14:00', '16:00', 50, 'FBN414E', 'BOFI', '205'), /* rel elm */
        (2017, 2, 'hétfő', '8:00', '10:00', 50, 'FBN414G', 'BOFI', '203'),
-       (2016, 1, 'hétfő', '10:00', '12:00', 100, 'FMBN108E', 'BOFI', '205'), /* linalg */
+       (2016, 1, 'hétfő', '14:00', '16:00', 100, 'FMBN108E', 'BOFI', '205'), /* linalg */
        (2016, 1, 'kedd', '16:00', '18:00', 50, 'FMBN108G', 'BOFI', '203'),
        (2016, 1, 'kedd', '8:00', '10:00', 50, 'FMBN108G', 'BOFI', '204'),
        (2017, 1, 'péntek', '13:00', '14:00', 60, 'FBN218E', 'BOFI', '204'), /* matmód */
@@ -301,7 +306,7 @@ values
        ('HOZYAAT.SZE', 2017, 1, 'kedd', '12:00', 'BOFI', '206'),
        ('GEAYAAT.SZE', 2017, 2, 'szerda', '14:00', 'BOFI', '205'), /* rel elm */
        ('GEAYAAT.SZE', 2017, 2, 'hétfő', '8:00', 'BOFI', '203'),
-       ('FELYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'BOFI', '205'), /* linalg */
+       ('FELYAAT.SZE', 2016, 1, 'hétfő', '14:00', 'BOFI', '205'), /* linalg */
        ('FELYAAT.SZE', 2016, 1, 'kedd', '16:00', 'BOFI', '203'),
        ('FELYAAT.SZE', 2016, 1, 'kedd', '8:00', 'BOFI', '204'),
        ('GOTYAAT.SZE', 2017, 1, 'péntek', '13:00', 'BOFI', '204'), /* matmód */
@@ -323,7 +328,7 @@ values
        (4, 'ARFYAAT.SZE', 2017, 1, 'kedd', '12:00', 'BOFI', '205'),
        (5, 'ARFYAAT.SZE', 2017, 2, 'szerda', '14:00', 'BOFI', '205'), /* rel elm */
        (5, 'ARFYAAT.SZE', 2017, 2, 'hétfő', '8:00', 'BOFI', '203'),
-       (4, 'ARFYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'BOFI', '205'), /* linalg */
+       (4, 'ARFYAAT.SZE', 2016, 1, 'hétfő', '14:00', 'BOFI', '205'), /* linalg */
        (5, 'ARFYAAT.SZE', 2016, 1, 'kedd', '8:00', 'BOFI', '204'),
        (5, 'ARFYAAT.SZE', 2017, 1, 'péntek', '13:00', 'BOFI', '204'), /* matmód */
        (4, 'ARFYAAT.SZE', 2017, 1, 'csütörtök', '10:00', 'BOFI', '205'),
@@ -340,138 +345,129 @@ values
        (2, 'TOPYAAT.SZE', 2017, 1, 'kedd', '12:00', 'BOFI', '205'),
        (4, 'TOPYAAT.SZE', 2017, 2, 'szerda', '14:00', 'BOFI', '205'), /* rel elm */
        (5, 'TOPYAAT.SZE', 2017, 2, 'hétfő', '8:00', 'BOFI', '203'),
-       (4, 'TOPYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'BOFI', '205'), /* linalg */
+       (4, 'TOPYAAT.SZE', 2016, 1, 'hétfő', '14:00', 'BOFI', '205'), /* linalg */
        (4, 'TOPYAAT.SZE', 2016, 1, 'kedd', '8:00', 'BOFI', '204'),
        (3, 'TOPYAAT.SZE', 2017, 1, 'péntek', '13:00', 'BOFI', '204'), /* matmód */
        (3, 'TOPYAAT.SZE', 2017, 1, 'csütörtök', '10:00', 'BOFI', '205'),
        (3, 'TOPYAAT.SZE', 2018, 1, 'szerda', '18:00', 'BOFI', '206'), /* statfiz */
-       (4, 'TOPYAAT.SZE', 2018, 1, 'kedd', '12:00', 'BOFI', '204')
-       ;
-
-/*
-hallgato -> felvett -> tanora -> kurzus
-    select on etr_code
-                select on kurzus_kod
-*/
-
-select f.etr_kod, f2.vnev, f2.knev, avg(erdemjegy) as atlag, sum(kredit_ertek * erdemjegy) / sum(kredit_ertek) as KKI,
-       sum(kredit_ertek) as `ossz kredit` from felvett as f
-inner join tanora t on
-f.ev = t.ev and f.felev = t.felev and t.nap = f.nap and t.kezdes = f.kezdes and
-f.epulet_kod = t.epulet_kod and f.terem_kod = t.terem_kod
-inner join kurzus k on t.kurzus_kod = k.kurzus_kod
-left join felhasznalo f2 on f.etr_kod = f2.etr_kod
-group by f.etr_kod;
-
-select f.etr_kod,
-       f2.vnev,
-       f2.knev,
-       avg(erdemjegy)                                    as atlag,
-       sum(kredit_ertek * erdemjegy) / sum(kredit_ertek) as KKI,
-       sum(kredit_ertek)                                 as `ossz kredit`
-from felvett as f
-         natural join tanora t
-         inner join kurzus k on t.kurzus_kod = k.kurzus_kod
-         left join felhasznalo f2 on f.etr_kod = f2.etr_kod
-where erdemjegy != 1
-group by f.etr_kod;
-
-select etr_kod, vnev, knev, avg(erdemjegy) as `hagy. atlag`, sum(kredit_ertek) as `ossz kredit`
-from felvett natural join tanora natural join kurzus natural join felhasznalo
-group by etr_kod;
-
-select */*hallgato.etr_kod, vnev, knev, tanora.kurzus_kod*/
-from felhasznalo
-natural join hallgato
-natural join felvett
-natural join tanora
-left join kurzus k on k.kurzus_kod = tanora.kurzus_kod
-order by hallgato.etr_kod
-;
-
-select * from oktato o
-inner join tart t on o.etr_kod = t.etr_kod
-inner join tanora tan on
-t.ev = tan.ev and t.felev = tan.felev and t.nap = tan.nap and
-t.kezdes = tan.kezdes and t.epulet_kod = tan.epulet_kod and t.terem_kod = tan.terem_kod
-;
-
-/*
- Melyik oktató milyen órákat tart
- */
-select etr_kod as `oktato`, ev, felev, nap, kezdes, vegzes, epulet_kod, terem_kod
-from oktato o natural join tart t
-natural join tanora tan
-order by ev, felev, nap, kezdes
-;
-
-/*
- ugyanez, csak left joinnal
- */
-select */*tan.kurzus_kod, o.etr_kod as oktató, ev, felev, nap, kezdes, vegzes, epulet_kod, terem_kod*/
-from oktato o natural join tart t
-natural join tanora tan
-left join kurzus k on k.kurzus_kod = tan.kurzus_kod
-order by ev, felev, nap, kezdes
-;
-
-/*
- Adott évben, félévben és napon hány órát tartottak meg
- */
-select ev, felev, nap, count(kezdes) as freq
-from oktato o natural join tart t
-natural join tanora tan
-group by ev, felev, nap
-order by ev, felev, nap
-;
-
-/*
- Adott évben félévben, napon és órában hány óra kezdődött
- */
-select ev, felev, nap, count(kezdes) as freq
-from oktato o natural join tart t
-natural join tanora tan
-group by ev, felev, nap, kezdes
-order by ev, felev, nap, kezdes
-;
-
-select * from
-tanora
-where terem_kod = '205' and epulet_kod = 'BOFI'
-  and felev = 1 and ev = 2016 and nap = 'hétfő'
-  and ((kezdes between '10:00' and '11:00') or vegzes between '10:00' and '12:00');
-
-insert into felvett
-values #        Kristóf
+       (4, 'TOPYAAT.SZE', 2018, 1, 'kedd', '12:00', 'BOFI', '204'),
+#        Kristóf
        (5, 'NAKYAAT.SZE', 2016, 1, 'hétfő', '10:00', 'DOMFI', '101'), /* mecha */
        (5, 'NAKYAAT.SZE', 2016, 1, 'szerda', '12:00', 'BOFI', '203'),
        (5, 'NAKYAAT.SZE', 2016, 2, 'kedd', '10:00', 'DOMFI', '101'), /* hullámtan */
        (5, 'NAKYAAT.SZE', 2016, 2, 'csütörtök', '14:00', 'BOFI', '204'),
        (5, 'NAKYAAT.SZE', 2017, 1, 'péntek', '10:00', 'DOMFI', '101'), /* elektro */
        (5, 'NAKYAAT.SZE', 2017, 1, 'kedd', '14:00', 'BOFI', '204');
+       ;
 
-# Listázzuk a nem teljesített előfeltételeket (adott hallgató és kurzus)
-SELECT kurzus_kod_felt
-FROM elofeltetele
-where kurzus_kod = 'FBN414E' and elofeltetele.kurzus_kod_felt NOT IN
-                         (SELECT tanora.kurzus_kod
-                          FROM felvett natural join tanora
-                          WHERE etr_kod = 'NAKYAAT.SZE');
-
-select * from elofeltetele natural join kurzus
-where kurzus_kod = 'FBN414E';
-
-select * from elofeltetele natural join kurzus where kurzus_kod = 'FBN414E';
-
-select kurzus_kod_felt, nev, kredit_ertek
-from elofeltetele inner join kurzus k
-on k.kurzus_kod = elofeltetele.kurzus_kod_felt
-where elofeltetele.kurzus_kod = 'FBN414E';
-
-select * from kurzus as k
-where k.kurzus_kod in (select kurzus_kod_felt from elofeltetele as e where e.kurzus_kod = 'FBN414E');
-
-select kurzus_kod_felt, kredit_ertek, gyakorlat, nev, etr_kod
-from elofeltetele inner join kurzus
-on elofeltetele.kurzus_kod = kurzus.kurzus_kod
-where elofeltetele.kurzus_kod = 'FBN414E';
+# Néhány lekérdezés tesztelésképpen
+#
+# select f.etr_kod, f2.vnev, f2.knev, avg(erdemjegy) as atlag, sum(kredit_ertek * erdemjegy) / sum(kredit_ertek) as KKI,
+#        sum(kredit_ertek) as `ossz kredit` from felvett as f
+# inner join tanora t on
+# f.ev = t.ev and f.felev = t.felev and t.nap = f.nap and t.kezdes = f.kezdes and
+# f.epulet_kod = t.epulet_kod and f.terem_kod = t.terem_kod
+# inner join kurzus k on t.kurzus_kod = k.kurzus_kod
+# left join felhasznalo f2 on f.etr_kod = f2.etr_kod
+# group by f.etr_kod;
+#
+# select f.etr_kod,
+#        f2.vnev,
+#        f2.knev,
+#        avg(erdemjegy)                                    as atlag,
+#        sum(kredit_ertek * erdemjegy) / sum(kredit_ertek) as KKI,
+#        sum(kredit_ertek)                                 as `ossz kredit`
+# from felvett as f
+#          natural join tanora t
+#          inner join kurzus k on t.kurzus_kod = k.kurzus_kod
+#          left join felhasznalo f2 on f.etr_kod = f2.etr_kod
+# where erdemjegy != 1
+# group by f.etr_kod;
+#
+# select etr_kod, vnev, knev, avg(erdemjegy) as `hagy. atlag`, sum(kredit_ertek) as `ossz kredit`
+# from felvett natural join tanora natural join kurzus natural join felhasznalo
+# group by etr_kod;
+#
+# select */*hallgato.etr_kod, vnev, knev, tanora.kurzus_kod*/
+# from felhasznalo
+# natural join hallgato
+# natural join felvett
+# natural join tanora
+# left join kurzus k on k.kurzus_kod = tanora.kurzus_kod
+# order by hallgato.etr_kod
+# ;
+#
+# # melyik oktató milyen órát tart
+# select f.etr_kod, vnev, knev, k.kurzus_kod, nev, ev, felev, nap, tan.kezdes, vegzes, t.epulet_kod, t.terem_kod from oktato o
+# natural join felhasznalo as f
+# natural join tart t
+# natural join tanora tan
+# inner join kurzus k on tan.kurzus_kod = k.kurzus_kod;
+#
+# /*
+#  Adott évben, félévben és napon hány órát tartottak meg
+#  */
+# select ev, felev, nap, count(kezdes) as freq
+# from oktato o natural join tart t
+# natural join tanora tan
+# group by ev, felev, nap
+# order by ev, felev, nap
+# ;
+#
+# /*
+#  Adott évben félévben, napon és órában hány óra kezdődött
+#  */
+# select ev, felev, nap, count(kezdes) as freq
+# from oktato o natural join tart t
+# natural join tanora tan
+# group by ev, felev, nap, kezdes
+# order by ev, felev, nap, kezdes
+# ;
+#
+# select * from
+# tanora
+# where terem_kod = '205' and epulet_kod = 'BOFI'
+#   and felev = 1 and ev = 2016 and nap = 'hétfő'
+#   and ((kezdes between '10:00' and '11:00') or vegzes between '10:00' and '12:00');
+#
+#
+# # Listázzuk a nem teljesített előfeltételeket (adott hallgató és kurzus)
+# SELECT kurzus_kod_felt
+# FROM elofeltetele
+# where kurzus_kod = 'FBN414E' and elofeltetele.kurzus_kod_felt NOT IN
+#                          (SELECT tanora.kurzus_kod
+#                           FROM felvett natural join tanora
+#                           WHERE etr_kod = 'NAKYAAT.SZE');
+#
+# select * from elofeltetele natural join kurzus
+# where kurzus_kod = 'FBN414E';
+#
+# select * from elofeltetele natural join kurzus where kurzus_kod = 'FBN414E';
+#
+# select kurzus_kod_felt, nev, kredit_ertek
+# from elofeltetele inner join kurzus k
+# on k.kurzus_kod = elofeltetele.kurzus_kod_felt
+# where elofeltetele.kurzus_kod = 'FBN414E';
+#
+# select * from kurzus as k
+# where k.kurzus_kod in (select kurzus_kod_felt from elofeltetele as e where e.kurzus_kod = 'FBN414E');
+#
+# select kurzus_kod_felt, kredit_ertek, gyakorlat, nev, etr_kod
+# from elofeltetele inner join kurzus
+# on elofeltetele.kurzus_kod = kurzus.kurzus_kod
+# where elofeltetele.kurzus_kod = 'FBN414E';
+#
+# select felh.etr_kod,
+#        felh.vnev,
+#        felh.knev,
+#        ev,
+#        felev,
+#        avg(erdemjegy)                                    as atlag,
+#        sum(kredit_ertek * erdemjegy) / 30 as KKI,
+#        sum(kredit_ertek)                                 as `ossz kredit`
+# from felvett as felv
+#          natural join tanora t
+#          inner join kurzus k on t.kurzus_kod = k.kurzus_kod
+#          left join felhasznalo felh on felv.etr_kod = felh.etr_kod
+# where erdemjegy != 1
+# group by felh.etr_kod, ev, felev;

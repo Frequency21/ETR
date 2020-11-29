@@ -14,8 +14,7 @@ public class AttendanceDAO extends DAO {
     public void addAttendanceWithGrade(byte grade, String etrCode, short year, byte semester, String day,
                                        LocalTime begin, String buildingCode, String roomCode)
         throws MissingRequirementException {
-        List<String> missingCourseCodes = missingRequirements(etrCode, year, semester, day,
-            begin, buildingCode, roomCode);
+        List<String> missingCourseCodes = missingRequirements(etrCode, year, semester, day, begin);
         if (!missingCourseCodes.isEmpty())
             throw new MissingRequirementException(missingCourseCodes);
         String sql = "INSERT INTO felvett VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -29,20 +28,11 @@ public class AttendanceDAO extends DAO {
             stmt.setTime(6, Time.valueOf(begin));
             stmt.setString(7, buildingCode);
             stmt.setString(8, roomCode);
-            int success = stmt.executeUpdate();
-            Alert alert;
-            if (success > 0) {
-                alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("A tanóra felvétele sikeres volt.");
-            } else {
-                alert = new Alert(Alert.AlertType.WARNING);
-                alert.setHeaderText("A tanóra felvétele sikertelen volt.");
-            }
-            alert.show();
+            stmt.executeUpdate();
         } catch (SQLIntegrityConstraintViolationException ex) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("A tanóra felvétele sikertelen volt!");
-            if (ex.getMessage().contains("fk_felvett_tanora")) {
+            alert.setTitle("A teljesítés felvétele sikertelen volt!");
+            if (ex.getMessage().contains("PRIMARY")) {
                 alert.setHeaderText("Ezt a tanórát az adott hallgató már felvette / teljesítette!");
             }
             alert.show();
@@ -56,8 +46,7 @@ public class AttendanceDAO extends DAO {
     public void addAttendance(String etrCode, short year, byte semester, String day,
                               LocalTime begin, String buildingCode, String roomCode)
         throws MissingRequirementException {
-        List<String> missingCourseCodes = missingRequirements(etrCode, year, semester, day,
-            begin, buildingCode, roomCode);
+        List<String> missingCourseCodes = missingRequirements(etrCode, year, semester, day, begin);
         if (!missingCourseCodes.isEmpty())
             throw new MissingRequirementException(missingCourseCodes);
         String sql = "INSERT INTO felvett VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -75,9 +64,11 @@ public class AttendanceDAO extends DAO {
             Alert alert;
             if (success > 0) {
                 alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Tanóra felvétele");
                 alert.setHeaderText("A tanóra felvétele sikeres volt.");
             } else {
                 alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Tanóra felvétele");
                 alert.setHeaderText("A tanóra felvétele sikertelen volt.");
             }
             alert.show();
@@ -93,11 +84,9 @@ public class AttendanceDAO extends DAO {
         }
     }
 
-    private List<String> missingRequirements(String etrCode, short year, byte semester, String day, LocalTime begin,
-                                             String buildingCode, String roomCode) {
+    private List<String> missingRequirements(String etrCode, short year, byte semester, String day, LocalTime begin) {
         List<String> missingCoursesCode = new ArrayList<>();
-        String sqlFindCourseCode = "SELECT kurzus_kod FROM tanora WHERE ev = ? AND felev = ? AND nap = ? AND " +
-            "kezdes = ? AND epulet_kod = ? AND terem_kod = ?";
+        String sqlFindCourseCode = "SELECT kurzus_kod FROM tanora WHERE ev = ? AND felev = ? AND nap = ? AND kezdes = ?";
         String courseCode = null;
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = connection.prepareStatement(sqlFindCourseCode)) {
@@ -105,8 +94,6 @@ public class AttendanceDAO extends DAO {
             stmt.setByte(2, semester);
             stmt.setString(3, day);
             stmt.setTime(4, Time.valueOf(begin));
-            stmt.setString(5, buildingCode);
-            stmt.setString(6, roomCode);
             ResultSet rs = stmt.executeQuery();
             if (rs.next())
                 courseCode = rs.getString("kurzus_kod");
@@ -130,10 +117,8 @@ public class AttendanceDAO extends DAO {
         return missingCoursesCode;
     }
 
-    public void deleteAttendance(String etrCode, short year, byte semester, String day, LocalTime begin,
-                                 String buildingCode, String roomCode) {
-        String sql = "DELETE FROM felvett WHERE etr_kod = ? AND ev = ? AND felev = ? AND nap = ? AND kezdes = ? AND " +
-            "epulet_kod = ? AND terem_kod = ?";
+    public void deleteAttendance(String etrCode, short year, byte semester, String day, LocalTime begin) {
+        String sql = "DELETE FROM felvett WHERE etr_kod = ? AND ev = ? AND felev = ? AND nap = ? AND kezdes = ?";
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, etrCode);
@@ -141,8 +126,6 @@ public class AttendanceDAO extends DAO {
             stmt.setByte(3, semester);
             stmt.setString(4, day);
             stmt.setTime(5, Time.valueOf(begin));
-            stmt.setString(6, buildingCode);
-            stmt.setString(7, roomCode);
             int rowDeleted = stmt.executeUpdate();
             Alert alert;
             if (rowDeleted == 0) {
@@ -160,10 +143,8 @@ public class AttendanceDAO extends DAO {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    public void updateAttendanceWithGrade(byte grade, String etrCode, short year, byte semester, String day,
-                                          LocalTime begin, String buildingCode, String roomCode) {
-        String sqlUpd = "UPDATE felvett SET erdemjegy = ? WHERE etr_kod = ? AND ev = ? AND felev = ? AND nap = ? " +
-            "AND kezdes = ? AND epulet_kod = ? AND terem_kod = ?";
+    public void updateAttendanceWithGrade(byte grade, String etrCode, short year, byte semester, String day, LocalTime begin) {
+        String sqlUpd = "UPDATE felvett SET erdemjegy = ? WHERE etr_kod = ? AND ev = ? AND felev = ? AND nap = ? AND kezdes = ?";
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = connection.prepareStatement(sqlUpd)) {
             stmt.setByte(1, grade);
@@ -172,8 +153,6 @@ public class AttendanceDAO extends DAO {
             stmt.setByte(4, semester);
             stmt.setString(5, day);
             stmt.setTime(6, Time.valueOf(begin));
-            stmt.setString(7, buildingCode);
-            stmt.setString(8, roomCode);
             int rowUpd = stmt.executeUpdate();
             Alert alert;
             if (rowUpd == 0) {
@@ -191,10 +170,8 @@ public class AttendanceDAO extends DAO {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    public void updateAttendance(String etrCode, short year, byte semester, String day,
-                                 LocalTime begin, String buildingCode, String roomCode) {
-        String sqlUpd = "UPDATE felvett SET erdemjegy = ? WHERE etr_kod = ? AND ev = ? AND felev = ? AND nap = ? " +
-            "AND kezdes = ? AND epulet_kod = ? AND terem_kod = ?";
+    public void updateAttendance(String etrCode, short year, byte semester, String day, LocalTime begin) {
+        String sqlUpd = "UPDATE felvett SET erdemjegy = ? WHERE etr_kod = ? AND ev = ? AND felev = ? AND nap = ? AND kezdes = ?";
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = connection.prepareStatement(sqlUpd)) {
             stmt.setNull(1, Types.TINYINT);
@@ -203,8 +180,6 @@ public class AttendanceDAO extends DAO {
             stmt.setByte(4, semester);
             stmt.setString(5, day);
             stmt.setTime(6, Time.valueOf(begin));
-            stmt.setString(7, buildingCode);
-            stmt.setString(8, roomCode);
             int rowUpd = stmt.executeUpdate();
             Alert alert;
             if (rowUpd == 0) {

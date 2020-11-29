@@ -16,6 +16,9 @@
     <Tab fx:id="lectures" closable="false" text="Tanórák">
         <fx:include fx:id="lecturesTab" source="LecturesTab.fxml" />
     </Tab>
+    <Tab fx:id="teaches" closable="false" text="Tart">
+        <fx:include fx:id="teachesTab" source="TeachesTab.fxml" />
+    </Tab>
     <Tab fx:id="addAttendances" closable="false" text="Teljesítések felvétele">
         <fx:include fx:id="addAttendanceTab" source="AddAttendanceTab.fxml" />
     </Tab>
@@ -24,5 +27,11 @@
     </Tab>
     <Tab fx:id="requirements" closable="false" text="Előfeltételek">
         <fx:include fx:id="requirementsTab" source="RequirementsTab.fxml" />
+    </Tab>
+    <Tab fx:id="gradePointAverages" closable="false" text="Tanulmányi átlagok">
+        <fx:include fx:id="gradePointAveragesTab" source="gradePointAverages.fxml" />
+    </Tab>
+    <Tab fx:id="lectureRooms" closable="false" text="Termek">
+        <fx:include fx:id="lectureRoomTab" source="LectureRoomTab.fxml" />
     </Tab>
 </TabPane>

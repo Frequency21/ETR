@@ -70,16 +70,10 @@ public class CoursesTabController implements Initializable {
             alert.show();
             return;
         }
-        try {
-            courseDAO.addCourse(tfCourseCode.getText(), Short.parseShort(tfCredit.getText()),
-                cbPractice.isSelected(), tfName.getText(), tfEtrCode.getText());
-        } catch (SQLIntegrityConstraintViolationException throwables) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Kurzus felvétele");
-            alert.setHeaderText("A kurzuskód már szerepel a rendszerben!");
-            alert.show();
-            return;
-        }
+
+        courseDAO.addCourse(tfCourseCode.getText(), Short.parseShort(tfCredit.getText()),
+            cbPractice.isSelected(), tfName.getText(), tfEtrCode.getText());
+
         clear();
         showCourses();
     }

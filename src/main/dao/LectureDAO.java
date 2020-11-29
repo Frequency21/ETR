@@ -34,7 +34,18 @@ public class LectureDAO extends DAO {
             stmt.setString(9, roomCode);
             stmt.executeUpdate();
         } catch (SQLIntegrityConstraintViolationException ex) {
-            throw ex;
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("A hozzáadás sikertelen volt!");
+            if (ex.getMessage().contains("fk_tanora_kurzus")) {
+                alert.setHeaderText("Nem létezik ilyen kurzuskód!");
+            } else if (ex.getMessage().contains("fk_tanora_terem")) {
+                alert.setHeaderText("Nem létezik ilyen terem-, épületkód páros!");
+            } else if (ex.getMessage().contains("PRIMARY")) {
+                alert.setHeaderText("Abban az időpontban és teremben már van tartanak egy órát.");
+            } else if (ex.getMessage().contains("begin_lt_end")) {
+                alert.setHeaderText("A kezdés időpontja nem haladhatja meg a végzését!");
+            }
+            alert.show();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
