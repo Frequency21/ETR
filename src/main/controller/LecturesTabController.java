@@ -151,13 +151,13 @@ public class LecturesTabController implements Initializable {
             lectureDAO.addLecture(Short.parseShort(tfYear.getText()), (byte) (rbSemester1.isSelected() ? 1 : 2),
                 cbDay.getValue(), spBegin.getValue(), spEnd.getValue(), Short.parseShort(tfMax.getText()),
                 tfCourseCode.getText(), tfBuildingCode.getText(), tfRoomCode.getText());
-        } catch (SQLIntegrityConstraintViolationException throwables) {
+        } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Tanóra felvétele");
-            alert.setHeaderText("");
+            alert.setTitle("Input hiba!");
+            alert.setHeaderText("Az év / max létszám értéke csak szám lehet");
             alert.show();
-            return;
         }
+
         clear();
         showLectures();
     }
@@ -178,11 +178,18 @@ public class LecturesTabController implements Initializable {
             alert.show();
             return;
         }
-        lectureDAO.updateLecture(Short.parseShort(tfYearTo.getText()), (byte) (rbSemester1To.isSelected() ? 1 : 2),
-            cbDayTo.getValue(), spBeginTo.getValue(), spEndTo.getValue(), Short.parseShort(tfMaxTo.getText()),
-            tfCourseCodeTo.getText(), tfBuildingCodeTo.getText(), tfRoomCodeTo.getText(),
-            Short.parseShort(tfYear.getText()), (byte) (rbSemester1.isSelected() ? 1 : 2),
-            cbDay.getValue(), spBegin.getValue(), tfBuildingCode.getText(), tfRoomCode.getText());
+        try {
+            lectureDAO.updateLecture(Short.parseShort(tfYearTo.getText()), (byte) (rbSemester1To.isSelected() ? 1 : 2),
+                cbDayTo.getValue(), spBeginTo.getValue(), spEndTo.getValue(), Short.parseShort(tfMaxTo.getText()),
+                tfCourseCodeTo.getText(), tfBuildingCodeTo.getText(), tfRoomCodeTo.getText(),
+                Short.parseShort(tfYear.getText()), (byte) (rbSemester1.isSelected() ? 1 : 2),
+                cbDay.getValue(), spBegin.getValue(), tfBuildingCode.getText(), tfRoomCode.getText());
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Input hiba!");
+            alert.setHeaderText("Az év / max létszám értéke csak szám lehet");
+            alert.show();
+        }
 //        clear();
         showLectures();
     }
@@ -202,8 +209,15 @@ public class LecturesTabController implements Initializable {
             alert.show();
             return;
         }
-        lectureDAO.deleteLecture(Short.parseShort(tfYear.getText()), (byte) (rbSemester1.isSelected() ? 1 : 2),
-            cbDay.getValue(), spBegin.getValue(), tfBuildingCode.getText(), tfRoomCode.getText());
+        try {
+            lectureDAO.deleteLecture(Short.parseShort(tfYear.getText()), (byte) (rbSemester1.isSelected() ? 1 : 2),
+                cbDay.getValue(), spBegin.getValue(), tfBuildingCode.getText(), tfRoomCode.getText());
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Input hiba!");
+            alert.setHeaderText("Az év értéke csak szám lehet");
+            alert.show();
+        }
         clear();
         showLectures();
     }

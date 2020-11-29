@@ -71,8 +71,15 @@ public class CoursesTabController implements Initializable {
             return;
         }
 
-        courseDAO.addCourse(tfCourseCode.getText(), Short.parseShort(tfCredit.getText()),
-            cbPractice.isSelected(), tfName.getText(), tfEtrCode.getText());
+        try {
+            courseDAO.addCourse(tfCourseCode.getText(), Short.parseShort(tfCredit.getText()),
+                cbPractice.isSelected(), tfName.getText(), tfEtrCode.getText());
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Input hiba!");
+            alert.setHeaderText("A kredit értéke csak szám lehet");
+            alert.show();
+        }
 
         clear();
         showCourses();
@@ -88,8 +95,15 @@ public class CoursesTabController implements Initializable {
             alert.show();
             return;
         }
-        courseDAO.updateCourse(tfCourseCode.getText(), Short.parseShort(tfCredit.getText()), cbPractice.isSelected(),
-            tfName.getText(), tfEtrCode.getText());
+        try {
+            courseDAO.updateCourse(tfCourseCode.getText(), Short.parseShort(tfCredit.getText()), cbPractice.isSelected(),
+                tfName.getText(), tfEtrCode.getText());
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Input hiba!");
+            alert.setHeaderText("A kredit értéke csak szám lehet");
+            alert.show();
+        }
 //        clear();
         showCourses();
     }

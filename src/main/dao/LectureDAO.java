@@ -18,8 +18,7 @@ public class LectureDAO extends DAO {
 
     @SuppressWarnings("DuplicatedCode")
     public void addLecture(short year, byte semester, String day, LocalTime begin, LocalTime end, short max,
-                           String courseCode, String buildingCode, String roomCode)
-        throws SQLIntegrityConstraintViolationException {
+                           String courseCode, String buildingCode, String roomCode) {
         String sql = "INSERT INTO tanora VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = connection.prepareStatement(sql)) {

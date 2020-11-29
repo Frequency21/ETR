@@ -34,7 +34,7 @@ public class StudentDAO extends DAO {
         return students;
     }
 
-    public void addStudent(String firstName, String lastName, String major, short year, String email) throws SQLIntegrityConstraintViolationException {
+    public void addStudent(String firstName, String lastName, String major, short year, String email) {
         String sqlUser = "INSERT INTO felhasznalo VALUES (?, ?, ?, ?)",
             sqlStud = "INSERT INTO hallgato VALUES (?, ?, ?)";
         String prefix = ETRCodeMaker.etrCodePrefix(firstName, lastName);
@@ -71,7 +71,10 @@ public class StudentDAO extends DAO {
             alert.setTitle("Új adat felvitele");
             alert.show();
         } catch (SQLIntegrityConstraintViolationException ex) {
-            throw ex;
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Hallgató felvétele");
+            alert.setHeaderText("Az email cím már regisztrálva van a rendszerben");
+            alert.show();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

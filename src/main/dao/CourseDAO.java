@@ -37,6 +37,8 @@ public class CourseDAO extends DAO {
                 alert.setHeaderText("Kurzusfelelősnek csak oktató etr kódját lehet megadni!");
             } else if (ex.getMessage().contains("PRIMARY")) {
                 alert.setHeaderText("A kurzuskódhoz tartozó kurzus már regisztrálva van!");
+            } else if (ex.getMessage().contains("kredit_ertek")) {
+                alert.setHeaderText("A kurzus kreditértéke csak [0, 10] tartományon mozoghat!");
             }
             alert.show();
         } catch (SQLException throwables) {
@@ -91,6 +93,8 @@ public class CourseDAO extends DAO {
             alert.setTitle("A frissítés sikertelen volt!");
             if (ex.getMessage().contains("fk_kurzus_oktato")) {
                 alert.setHeaderText("Kurzusfelelősnek csak oktató etr kódját lehet megadni!");
+            } else if (ex.getMessage().contains("kredit_ertek")) {
+                alert.setHeaderText("A kurzus kreditértéke csak [0, 10] tartományon mozoghat!");
             }
             alert.show();
         } catch (MysqlDataTruncation ex) {

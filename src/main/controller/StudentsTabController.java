@@ -86,12 +86,11 @@ public class StudentsTabController implements Initializable {
         try {
             studentDAO.addStudent(tfFirstName.getText(), tfLastName.getText(), tfMajor.getText(),
                 Short.parseShort(tfYear.getText()), tfEmail.getText());
-        } catch (SQLIntegrityConstraintViolationException throwables) {
+        } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Hallgató felvétele");
-            alert.setHeaderText("Az email cím már regisztrálva van a rendszerben");
+            alert.setTitle("Input hiba!");
+            alert.setHeaderText("Az év értéke csak szám lehet");
             alert.show();
-            return;
         }
         clear();
         showStudents();
@@ -109,8 +108,15 @@ public class StudentsTabController implements Initializable {
             alert.show();
             return;
         }
-        studentDAO.updateStudent(tfEtrCode.getText(), tfFirstName.getText(), tfLastName.getText(), tfMajor.getText(),
-            Short.parseShort(tfYear.getText()), tfEmail.getText());
+        try {
+            studentDAO.updateStudent(tfEtrCode.getText(), tfFirstName.getText(), tfLastName.getText(), tfMajor.getText(),
+                Short.parseShort(tfYear.getText()), tfEmail.getText());
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Input hiba!");
+            alert.setHeaderText("Az év létszám értéke csak szám lehet");
+            alert.show();
+        }
 //        clear();
         showStudents();
     }
